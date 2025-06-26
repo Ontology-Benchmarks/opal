@@ -4,19 +4,28 @@ OPAL is a library designed to enable ontology-driven process mining. Ontology-dr
 
 OPAL is actively maintaned and developed by [Riley Moher](https://riley-momo.github.io/) of the semantic technologies (stl) laboratory at the University of Toronto.
 
-# Example Usage
+Example Usage
+------------
 
 PLACEHOLDER
 
 More thorough examples, including an example utilizing real-world enterprise data, are available in the examples directory of this repository.
 
 
-# Installation
+Installation
+------------
 
 OPAL can be installed on any python version >= 3.9.X by simply using pip to install this library from the github repository:
 
+```
+pip install git+https://github.com/Ontology-Benchmarks/opal
+```
+
+
+
 PLACEHOLDER
 
-# Release Notes
+Release Notes
+------------
 
 Release notes are tracked in the CHANGELOG.md file of this repository.
