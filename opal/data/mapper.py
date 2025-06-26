@@ -1,5 +1,4 @@
 from opal.data.event_data import EventData
-import opal.logic.base.encoding as encoding
 from opal.logic.z3.z3_literal import Z3Literal
 
 import pandas as pd
@@ -20,7 +19,7 @@ import dateutil.parser
 class LogMapper:
     def __init__(self, 
                  data: EventData, 
-                 output_encoding : encoding.LogicEncoding, 
+                 output_encoding : str, 
                  prefixes : dict = {'ex':'http://www.example.com/', 'on': 'https://stl.mie.utoronto.ca/ontologies/spm/'}):
         self.data = data
         self.output_encoding = output_encoding
@@ -261,15 +260,15 @@ class LogMapper:
         if not hasattr(self, 'kg'):
             self.generate_knowledge_graph()
         
-        # initialize an empty array for Z3 facts
-        z3_facts = np.array([])
+        # initialize an empty array for Z3 facts with length = number of triples in the graph
+        z3_facts = np.empty(len(self.kg.rdf_graph()), dtype=Z3Literal)
         
         graph = self.kg.rdf_graph()
         
         # define helper function to strip URIs
         strip_uri = lambda x: re.sub(r".*/", '', x)
         # define helper function to convert RDF triples to Z3 literals
-        def parse_triple(triple):
+        def parse_triple(triple) -> Z3Literal:
             s, p, o = triple
             # parse subject with ex prefix
             s = strip_uri(str(s))
@@ -287,17 +286,16 @@ class LogMapper:
                 else:
                     o = strip_uri(str(o))
                 terms = [s,o]
+                
+            return Z3Literal(predicate=predicate, terms=terms)
             
-            return predicate, terms
         
-        # iterate over all triples in the RDF graph
-        for triple in graph.triples((None, None, None)):
+        # map the triples in the graph to Z3Literal objects
+        for i,triple in enumerate(graph.triples((None, None, None))):
             # parse the triple to get predicate and terms
-            predicate, terms = parse_triple(triple)
-            # create a Z3Literal object
-            z3_literal = Z3Literal(predicate=predicate, terms=terms)
+            z3_literal = parse_triple(triple)
             # add the Z3Literal to the array of Z3 facts
-            z3_facts = np.append(z3_facts, z3_literal)
+            z3_facts[i] = z3_literal
         
         return z3_facts
 
