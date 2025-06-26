@@ -21,10 +21,6 @@ OPAL can be installed on any python version >= 3.9.X by simply using pip to inst
 pip install git+https://github.com/Ontology-Benchmarks/opal
 ```
 
-
-
-PLACEHOLDER
-
 Release Notes
 ------------
 
