@@ -7,10 +7,12 @@ from opal.data.event_data import EventData
 class LogProcessor:
     def __init__(self, log_path:str, 
                  col_dict:dict = {'caseID': 'case:concept:name', 'activityID': 'concept:name', 'timestamp': 'time:timestamp', 'resourceID': 'org:resource', 'eventID' : None, 'transition': 'lifecycle:transition'}, 
-                 process_name:str = 'P1'):
+                 process_name:str = 'P1',
+                 batch_size:int = 0):
         self.log_path = log_path
         self.col_dict = col_dict
         self.process_name = process_name
+        self.batch_size = batch_size
         
         
     def load_log(self, downsample_rate:float = 1.0) -> EventData:
@@ -21,6 +23,7 @@ class LogProcessor:
         """
         log_path = self.log_path
         col_dict = self.col_dict
+        batches = 0
         if any(log_path.lower().endswith(ext) for ext in ['.xes', '.xes.gz']): # if log is in XES format
             log = pm4py.read_xes(log_path)
             df = pm4py.convert_to_dataframe(log)
@@ -57,12 +60,30 @@ class LogProcessor:
             sampled_cases = np.random.choice(unique_cases, int(downsample_rate * len(unique_cases)), replace=False)
             df = df[df['caseID'].isin(sampled_cases)]
         
-        # create temporary log csv for reference
-        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as f:
-            f.write(df.to_csv(index=False))
-            self.log_path = f.name
-        
-        return EventData(data=df, metadata={'log_path': self.log_path, 'process_name': self.process_name})
+        # check if there is a defined batch size
+        if self.batch_size > 0:
+            # batching: batch the log by the number of cases defined through batch size
+            # if batch size is larger than the number of cases, use all cases
+            if self.batch_size >= len(df['caseID'].unique()):
+                df['batch'] = 0
+            else:
+                df['batch'] = (df.groupby('caseID').ngroup() // self.batch_size) + 1
+                batches = df['batch'].nunique()
+                
+        # save the dataframe to temporary CSV files - one for each batch if batching is enabled
+        log_paths = []
+        if batches > 0:
+            for batch_num in range(1, batches + 1):
+                batch_df = df[df['batch'] == batch_num].drop(columns=['batch'])
+                temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.csv')
+                batch_df.to_csv(temp_file.name, index=False)
+                log_paths.append(temp_file.name)
+        else:
+            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.csv')
+            df.to_csv(temp_file.name, index=False)
+            log_paths.append(temp_file.name)
+            
+        return EventData(data=df, metadata={'log_paths': log_paths, 'process_name': self.process_name, 'batches' : batches})
     
 
 

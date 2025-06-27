@@ -14,25 +14,10 @@ from string import Template
 import tempfile
 from itertools import combinations
 import dateutil.parser
+from tqdm import tqdm
 
-
-class LogMapper:
-    def __init__(self, 
-                 data: EventData, 
-                 output_encoding : str, 
-                 prefixes : dict = {'ex':'http://www.example.com/', 'on': 'https://stl.mie.utoronto.ca/ontologies/spm/'}):
-        self.data = data
-        self.output_encoding = output_encoding
-        self.prefixes = prefixes
-        self.mapping = self.build_mapping()
-        
-        
-    def build_mapping(self):
-        """
-        Modifies YARRML mapping according to expected columns in the log
-        """
-        
-        mapping_template = """
+# Define the mapping template for YARRML
+MAPPING_TEMPLATE = Template("""
         prefixes:
             ex: $ex_prefix
             on: $on_prefix
@@ -70,12 +55,25 @@ class LogMapper:
                 s: ex:$$($activityID)
                 po:
                 - [a, on:Activity]
+        """)
+
+class LogMapper:
+    def __init__(self, 
+                 data: EventData, 
+                 output_encoding : str, 
+                 prefixes : dict = {'ex':'http://www.example.com/', 'on': 'https://stl.mie.utoronto.ca/ontologies/spm/'}):
+        self.data = data
+        self.output_encoding = output_encoding
+        self.prefixes = prefixes
+        self.mappings = self.build_mappings()
+        
+        
+    def build_mapping(self, log_path: str):
         """
-        mapping_template = Template(mapping_template)
-        log_path = self.data.metadata['log_path']
-        
-        
-        mapping_string = mapping_template.substitute(
+        Modifies YARRML mapping according to expected columns in the log
+        """
+        # create a mapping string from the template
+        mapping_string = MAPPING_TEMPLATE.substitute(
             log_path=log_path,
             log_format='csv',
             ex_prefix=self.prefixes['ex'],
@@ -92,23 +90,50 @@ class LogMapper:
         # write rml mapping to temporary file
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.ttl') as f:
             f.write(rml_mapping)
-            self.rml_path = f.name
+            rml_path = f.name
         
-        return rml_mapping
+        return rml_mapping, rml_path
     
     
-    def generate_knowledge_graph(self, assume_distinct=False):
+    def build_mappings(self):
+        """
+        Builds the mappings for the log data
+        """
+        mappings = np.empty(len(self.data.metadata['log_paths']), dtype=object)
+        print("Building mappings for logs...")
+        for i in tqdm(range(len(self.data.metadata['log_paths']))):
+            current_log_path = self.data.metadata['log_paths'][i]
+            mapping = self.build_mapping(current_log_path)
+            mappings[i] = mapping
+        print("Mappings built.")
+        
+        return mappings
+    
+    def generate_knowledge_graphs(self):
+        """
+        Generates knowledge graphs for each mapping
+        """
+        
+        kgs = []
+        for mapping, mapping_path in self.mappings:
+            kg = self.generate_knowledge_graph(mapping_path)
+            kgs.append(kg)
+        self.kgs = kgs
+        return kgs
+    
+    
+    def generate_knowledge_graph(self, mapping_path):
         """
         Generates a knowledge graph from the log and mapping
         """
         # init knowledge graph
         print("Generating knowledge graph...")
-        kg = kglab.KnowledgeGraph(name="test", namespaces=self.prefixes)
+        kg = kglab.KnowledgeGraph(name=mapping_path.replace('.rml', ''), namespaces=self.prefixes)
         process_name = self.data.metadata['process_name']
         # generate config
         config_string = f"""
         [{process_name}]
-        mappings={self.rml_path}
+        mappings={mapping_path}
         """
         # write config to temporary file
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.ini') as f:
@@ -117,23 +142,6 @@ class LogMapper:
         # generate the knowledge graph from the config
         kg.materialize(kg_config_path)
         
-        if assume_distinct:
-            print("Adding disjointness axioms...")
-            # add disjointness axioms to each individual
-            i_c = kg.query_as_df(sparql="SELECT ?s ?o WHERE {?s ?p ?o . FILTER (?p = rdf:type)}")
-            for c in i_c['o'].unique():
-                # make individuals distinct within each class
-                inds = i_c[i_c['o'] == c]['s'].values
-                # sanitize strings by stripping <> characters
-                inds = [ind.strip('<>') for ind in inds]
-                # convert individuals to URIRefs
-                inds = [rdflib.URIRef(ind) for ind in inds] 
-                # iterate over unique individuals combinations
-                for pair in combinations(inds, 2):
-                    # add disjoint predicate to individuals
-                    kg.add(pair[0], rdflib.URIRef("http://www.w3.org/2002/07/owl#differentFrom"), pair[1])
-            
-        self.kg = kg
         print("Knowledge graph generated.")
         
         return kg
@@ -255,19 +263,10 @@ class LogMapper:
         """
         Generates a Z3 representation of the log
         """
-        
-        # first perform rdf mapping
-        if not hasattr(self, 'kg'):
-            self.generate_knowledge_graph()
-        
-        # initialize an empty array for Z3 facts with length = number of triples in the graph
-        z3_facts = np.empty(len(self.kg.rdf_graph()), dtype=Z3Literal)
-        
-        graph = self.kg.rdf_graph()
-        
         # define helper function to strip URIs
         strip_uri = lambda x: re.sub(r".*/", '', x)
-        # define helper function to convert RDF triples to Z3 literals
+        
+        # define a helper function to parse triples into Z3Literal objects
         def parse_triple(triple) -> Z3Literal:
             s, p, o = triple
             # parse subject with ex prefix
@@ -288,14 +287,32 @@ class LogMapper:
                 terms = [s,o]
                 
             return Z3Literal(predicate=predicate, terms=terms)
+        
+        # define helper to transform one kg into an array of Z3Literal objects
+        def kg_to_z3_literals(kg):
+            # initialize an empty array for Z3 facts with length = number of triples in the graph
+            z3_facts = np.empty(len(kg.rdf_graph()), dtype=Z3Literal)
+            # get the RDF graph from the knowledge graph
+            graph = kg.rdf_graph()
+
+            # map the triples in the graph to Z3Literal objects
+            for i,triple in enumerate(graph.triples((None, None, None))):
+                # parse the triple to get predicate and terms
+                z3_literal = parse_triple(triple)
+                # add the Z3Literal to the array of Z3 facts
+                z3_facts[i] = z3_literal
+            return z3_facts
+        
+        # initialize an empty array for Z3 literals
+        z3_facts_result = np.empty(0, dtype=Z3Literal)
+        
+        # first perform rdf mappings if necessary
+        if not hasattr(self, 'kgs'):
+            self.generate_knowledge_graphs()
+        
+        # iterate over all knowledge graphs and convert them to Z3 literals
+        for kg in self.kgs:
+            z3_facts_result = np.concatenate((z3_facts_result, kg_to_z3_literals(kg)), axis=0)
             
-        
-        # map the triples in the graph to Z3Literal objects
-        for i,triple in enumerate(graph.triples((None, None, None))):
-            # parse the triple to get predicate and terms
-            z3_literal = parse_triple(triple)
-            # add the Z3Literal to the array of Z3 facts
-            z3_facts[i] = z3_literal
-        
-        return z3_facts
+        return z3_facts_result
 
