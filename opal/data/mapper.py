@@ -115,9 +115,10 @@ class LogMapper:
         """
         
         kgs = []
-        for mapping, mapping_path in self.mappings:
+        for _, mapping_path in self.mappings:
             kg = self.generate_knowledge_graph(mapping_path)
             kgs.append(kg)
+            print(f"Knowledge graph {len(kgs)}/{len(self.mappings)} generated.")
         self.kgs = kgs
         return kgs
     
