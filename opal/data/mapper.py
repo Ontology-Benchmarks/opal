@@ -16,8 +16,36 @@ from itertools import combinations
 import dateutil.parser
 from tqdm import tqdm
 
-# Define the mapping template for YARRML
-MAPPING_TEMPLATE = Template("""
+# Define the mapping template for YARRML, with optional columns for resources and transitions
+def generate_yarrml_mapping(include_resources: bool, include_transitions: bool):
+    resource_block = ""
+    event_resource_line = ""
+    transition_block = ""
+    event_transition_line = ""
+    
+    if include_resources:
+        resource_block = """
+            resources:
+                sources:
+                - ['$log_path~$log_format']
+                s: ex:$$($resourceID)
+                po:
+                - [a, on:Resource]"""
+        
+        event_resource_line = "- [on:hasResource, ex:$$($resourceID)]"
+    if include_transitions:
+        transition_block = """
+            transitions:
+                sources:
+                - ['$log_path~$log_format']
+                s: ex:$$($transition)
+                po:
+                - [a, on:Transition]"""
+        
+        event_transition_line = "- [on:hasTransition, ex:$$($transition)]"
+        
+
+    template_str = f"""
         prefixes:
             ex: $ex_prefix
             on: $on_prefix
@@ -31,15 +59,13 @@ MAPPING_TEMPLATE = Template("""
                 - [a, on:Event]
                 - [on:hasCase, ex:$$($caseID)]
                 - [on:hasActivity, ex:$$($activityID)]
-                - [on:hasResource, ex:$$($resourceID)]
+                {event_resource_line}
+                {event_transition_line}
                 - [on:hasRecordedTime, $$($timestamp), xsd:dateTimeStamp]
-
-            resources:
-                sources:
-                - ['$log_path~$log_format']
-                s: ex:$$($resourceID)
-                po:
-                - [a, on:Resource]
+                
+            {resource_block}
+            
+            {transition_block}
 
             cases:
                 sources:
@@ -55,7 +81,10 @@ MAPPING_TEMPLATE = Template("""
                 s: ex:$$($activityID)
                 po:
                 - [a, on:Activity]
-        """)
+    """
+
+    return Template(template_str)
+
 
 class LogMapper:
     def __init__(self, 
@@ -72,8 +101,14 @@ class LogMapper:
         """
         Modifies YARRML mapping according to expected columns in the log
         """
+        # check if the log contains resources and transitions (optional columns)
+        include_resources = 'resourceID' in self.data.data.columns
+        include_transitions = 'transition' in self.data.data.columns
+        
+        mapping_template = generate_yarrml_mapping(include_resources, include_transitions)
+        
         # create a mapping string from the template
-        mapping_string = MAPPING_TEMPLATE.substitute(
+        mapping_string = mapping_template.substitute(
             log_path=log_path,
             log_format='csv',
             ex_prefix=self.prefixes['ex'],
@@ -82,7 +117,8 @@ class LogMapper:
             caseID='caseID',
             activityID='activityID',
             resourceID='resourceID',
-            timestamp='timestamp'
+            timestamp='timestamp',
+            transition='transition',
         )
         yaml = YAML(typ='safe', pure=True)
         yarrrml_content = yaml.load(mapping_string)
@@ -312,8 +348,9 @@ class LogMapper:
             self.generate_knowledge_graphs()
         
         # iterate over all knowledge graphs and convert them to Z3 literals
-        for kg in self.kgs:
+        for i,kg in enumerate(self.kgs):
             z3_facts_result = np.concatenate((z3_facts_result, kg_to_z3_literals(kg)), axis=0)
+            print(f"Z3 literal set generated ({i+1}/{len(self.kgs)})")
             
         return z3_facts_result
 

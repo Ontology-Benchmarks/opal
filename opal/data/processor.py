@@ -35,6 +35,16 @@ class LogProcessor:
         # add a process instance column to the dataframe
         df['processID'] = self.process_name
         
+        # update optional column flags
+        resource_included = all([
+            col_dict.get('resourceID') is not None,
+            col_dict.get('resourceID') in df.columns,
+        ])
+        transition_included = all([
+            col_dict.get('transition') is not None,
+            col_dict.get('transition') in df.columns,
+        ])
+        
         # if no unique identifier for events, create one
         if col_dict['eventID'] is None: 
             df['eventID'] = df.index
@@ -47,7 +57,10 @@ class LogProcessor:
         df['eventID'] = df['eventID'].apply((lambda x: f'E_{str(x)}'))
         df['caseID'] = df['caseID'].apply((lambda x: f'C_{str(x)}'))
         df['activityID'] = df['activityID'].apply((lambda x: f'A_{str(x)}'))
-        df['resourceID'] = df['resourceID'].apply((lambda x: f'R_{str(x)}'))
+        if resource_included:
+            df['resourceID'] = df['resourceID'].apply((lambda x: f'R_{str(x)}'))
+        if transition_included:
+            df['transition'] = df['transition'].apply((lambda x: f'T_{str(x)}'))
         # ensure timestamp is in datetime format
         df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
         
