@@ -2,15 +2,7 @@ from opal.logic.base.base_literal import Literal
 from z3 import Function, StringVal, BoolSort, RealSort, Not, DeclareSort, RealVal, Const
 import typing
 
-# define type for individuals
-Ind = DeclareSort('Ind')
 
-# define a register for functions, with temporal functions predefined
-SIGNATURE_REGISTER = {'hasRecordedTime' : Function('hasRecordedTime', Ind, RealSort()),
-    'begin_of' : Function('begin_of', Ind, RealSort()),
-    'end_of' : Function('end_of', Ind, RealSort()),}
-
-IND_REGISTER = {}
     
 
 class Z3Literal(Literal):
@@ -20,15 +12,15 @@ class Z3Literal(Literal):
         super().__init__(predicate, terms, positive)
         self._z3_expr = self._build_z3_expr()
     
-    def _build_z3_expr(self):
+    def _build_z3_expr(self, sig_ctx: typing.Dict[str, Function], ind_ctx: typing.Dict[str, Const], ind_type):
         """Builds the Z3 expression for this literal."""
         # check if the predicate is registered in the signature
-        if self.predicate in SIGNATURE_REGISTER:
-            func = SIGNATURE_REGISTER[self.predicate]
+        if self.predicate in sig_ctx:
+            func = sig_ctx[self.predicate]
         else:
             # If not registered, create a new function
-            func = Function(self.predicate, *([Ind] * len(self.terms)), BoolSort())
-            SIGNATURE_REGISTER[self.predicate] = func
+            func = Function(self.predicate, *([ind_type] * len(self.terms)), BoolSort())
+            sig_ctx[self.predicate] = func
         
          # Get expected argument sorts from the function signature
         arity = func.arity()
@@ -45,16 +37,16 @@ class Z3Literal(Literal):
 
         z3_args = []
         for term, expected_sort in zip(self.terms, domain_sorts):
-            if expected_sort == Ind:
+            if expected_sort == ind_type:
                 # Use a registered constant for individuals
-                if term not in IND_REGISTER:
-                    IND_REGISTER[term] = Const(term, Ind)
-                z3_args.append(IND_REGISTER[term])
+                if term not in ind_ctx:
+                    ind_ctx[term] = Const(term, ind_type)
+                z3_args.append(ind_ctx[term])
             elif expected_sort == RealSort(): 
                 # Convert term to real value (expecting numeric)
                 z3_args.append(RealVal(term))
             else:
-                raise TypeError(f"Unsupported sort {sort} for term '{term}'")
+                raise TypeError(f"Unsupported sort {expected_sort} for term '{term}'")
                 
         # Create the expression based on whether it's a predicate or not
         if is_predicate:

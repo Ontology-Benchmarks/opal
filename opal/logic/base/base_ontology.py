@@ -13,6 +13,18 @@ class Ontology:
         """
         # Initialize any necessary attributes or structures here
         pass
+    
+    def from_txt(self, text):
+        """
+        Loads the ontology from a text representation.
+        
+        Args:
+            text (str): The text representation of the ontology.
+        
+        Returns:
+            self: The current instance of the ontology.
+        """
+        raise NotImplementedError("This method should be implemented by subclasses.")
 
     def add_axiom(self, axiom):
         """
