@@ -1,10 +1,11 @@
 from opal.logic.base.base_ontology import Ontology
 from opal.logic.z3.z3_literal import Z3Literal
-from z3 import Function, BoolSort, RealSort, Not, DeclareSort, RealVal, Const, ForAll, Exists, And, Or, Implies
+from z3 import Function, BoolSort, RealSort, Not, DeclareSort, RealVal, Const, ForAll, Exists, And, Or, Implies, Lt, Le, Gt, Ge
+import re
 
 
 
-
+# This dictionary maps logical operation names (as captured in the ontology JSON) to their corresponding Z3 functions
 LOGICAL_OPS = {
     'ForAll': lambda var, body: ForAll(var, body),
     'Exists': lambda var, body: Exists(var, body),
@@ -12,9 +13,14 @@ LOGICAL_OPS = {
     'Or': Or,
     'Not': Not,
     'Implies': Implies,
+    '=': lambda a, b: a == b, 
+    '<': Lt,
+    '<=': Le,
+    '>': Gt,
+    '>=': Ge,
 }
 
-# define type for individuals
+# Define type for individuals
 Ind = DeclareSort('Ind')
 
 class Z3Ontology(Ontology):
@@ -25,14 +31,15 @@ class Z3Ontology(Ontology):
     for managing axioms, individuals, and the signature of the ontology.
     """
 
-    def __init__(self, signature, individuals, ):
+    def __init__(self, signature):
         """
         Initializes a new instance of the Z3Ontology class.
         """
         super().__init__()
+        self._predicate_map = signature or {}
     
     @classmethod
-    def from_json(cls, json, signature=None, individuals=None):
+    def from_json(cls, json, signature=None):
         """
         Loads the ontology from a JSON representation.
         
@@ -42,7 +49,7 @@ class Z3Ontology(Ontology):
         Returns:
             self: The current instance of the ontology.
         """
-        ontology = cls(signature=signature, individuals=individuals)
+        ontology = cls(signature=signature)
         
         # Check if supplied json arg is a file path or a string
         if json.endswith('.json'):
@@ -55,11 +62,11 @@ class Z3Ontology(Ontology):
         try:
             ontology_json = json.loads(json_str)  # parse from string
         except json.JSONDecodeError as e:
-            raise ValueError("Argument is neither a valid JSON string nor a valid file path") from e
+            raise ValueError("Invalid JSON supplied") from e
         
-        for axiom in ontology_json['axioms']:
+        for i, axiom in enumerate(ontology_json['axioms']):
             # Parse the axiom expression
-            a_name = 'onto_' + axiom['name']
+            a_name = f'ont_t_{i}_{axiom['name']}'
             a_description = axiom['description']
             expr = ontology._parse_expression(axiom['axiom'])
             axiom_dict = {
@@ -74,9 +81,10 @@ class Z3Ontology(Ontology):
             predicate = ground['predicate']
             terms = ground.get('terms', [])
             positive = ground.get('positive', True)
-            name = f'gr_{predicate}({terms})_{i}'
+            name = f'ont_a_{i}_{predicate}({terms})'
             z3_literal = Z3Literal(predicate, terms, positive)
-            ontology.add_literal(z3_literal, name=name)
+            literal_dict = {name : z3_literal}
+            ontology.add_literal(literal_dict)
             
         
         return ontology
@@ -94,20 +102,32 @@ class Z3Ontology(Ontology):
         """
         if var_ctx is None:
             var_ctx = {}
-            
-        # Initialize predicate_map if not exists
-        if not hasattr(self, '_predicate_map'):
-            self._predicate_map = {}
-            
+
         expr_str = expr_str.strip()
+
+        # Quantifiers
         if expr_str.startswith('ForAll') or expr_str.startswith('Exists'):
             quantifier, inner = expr_str.split('(', 1)
             args = inner.rsplit(')', 1)[0]
             var_part, body_part = args.split(',', 1)
             var_name = var_part.strip()
-            var = var_ctx.get(var_name, Const(var_name, Ind))
+            var = var_ctx.get(var_name)
+            if var is None:
+                # If not in context, create a new constant
+                var = Const(var_name, Ind)
             return LOGICAL_OPS[quantifier](var, self._parse_expression(body_part.strip(), {**var_ctx, var_name: var}))
-        elif '(' in expr_str:
+        
+        # Binary comparison operators
+        for op in ['>=', '<=', '==', '>', '<', '=']:
+            pattern = fr'(.+?)\s*{re.escape(op)}\s*(.+)'
+            match = re.fullmatch(pattern, expr_str)
+            if match:
+                lhs = self._parse_expression(match.group(1).strip(), var_ctx)
+                rhs = self._parse_expression(match.group(2).strip(), var_ctx)
+                return LOGICAL_OPS[op](lhs, rhs)
+
+        # Function or logical operator with arguments
+        if '(' in expr_str:
             func_name, inner = expr_str.split('(', 1)
             inner_args = [self._parse_expression(arg.strip(), var_ctx) for arg in self._split_arguments(inner.rsplit(')', 1)[0])]
             if func_name in LOGICAL_OPS:
@@ -115,13 +135,24 @@ class Z3Ontology(Ontology):
             elif func_name in self._predicate_map:
                 return self._predicate_map[func_name](*inner_args)
             else:
-                # otherwise, create a new z3 function symbol
                 func = Function(func_name, *([Ind] * len(inner_args)), BoolSort())
                 self._predicate_map[func_name] = func
-                return self._predicate_map[func_name](*inner_args)
+                return func(*inner_args)
+            
+        
+
+        # Numeric constant
+        try:
+            return RealVal(float(expr_str))
+        except ValueError:
+            pass
+
+        # Variable
+        if expr_str in var_ctx:
+            return var_ctx[expr_str]
         else:
-            # It's a variable name
-            return var_ctx.get(expr_str, Const(expr_str, Ind))
+            # Otherwise default to individual
+            return Const(expr_str, Ind)
 
     def _split_arguments(self, s):
         """
@@ -149,27 +180,36 @@ class Z3Ontology(Ontology):
         return args
         
         
-        def add_axiom(self, axiom):
-            """
-            Adds an axiom to the ontology.
-            Args:
-                axiom (Z3 expression): The axiom to add
-            """
-            self.axioms.append(axiom)
+    def add_axiom(self, axiom):
+        """
+        Adds an axiom to the ontology.
+        Args:
+            axiom (dictionary): The axiom to add
+        """
+        self.axioms.append(axiom)
+
+    def add_literal(self, literal):
+        """
+        Adds a literal to the ontology.
+        Args:
+            literal (dictionary): The literal to add
+        """
+        self.literals.append(literal)
     
-        
-        
-        
-        PSL_ONTOLOGY_JSON = {
-            'axioms': [
-            {
-            'name' : '',
-            'description' : '',
-            'axiom' : ''
-            },
-            
-            ], 
-            'ground': [
-            {'predicate': 'transition', 'terms': ['start'], 'positive': True},
-            {'predicate': 'transition', 'terms': ['complete'], 'positive': True},
-            ]}
+    
+
+
+
+PSL_ONTOLOGY_JSON = {
+    'axioms': [
+    {
+    'name' : '',
+    'description' : '',
+    'axiom' : ''
+    },
+    
+    ], 
+    'ground': [
+    {'predicate': 'transition', 'terms': ['start'], 'positive': True},
+    {'predicate': 'transition', 'terms': ['complete'], 'positive': True},
+    ]}
