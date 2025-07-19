@@ -88,7 +88,34 @@ class Z3Ontology(Ontology):
             
         
         return ontology
-        
+    
+    def _infer_var_sorts(self, expr_str, var_ctx):
+        '''Infers variable sorts from the expression string and updates the variable context.'''
+
+        if '(' not in expr_str:
+            return
+
+        func_name, inner = expr_str.split('(', 1)
+        if func_name not in self._predicate_map:
+            return
+
+        arg_str = inner.rsplit(')', 1)[0]
+        args = self._split_arguments(arg_str)
+        for i, arg in enumerate(args):
+            var_name = arg.strip()
+            if var_name in var_ctx:
+                continue
+            func = self._predicate_map[func_name]
+            try:
+                sig_sort = func.domain(i)
+            except:
+                continue  # Defensive check
+
+            if sig_sort == RealSort():
+                var_ctx[var_name] = Const(var_name, RealSort())
+            else:
+                var_ctx[var_name] = Const(var_name, Ind)
+            
     def _parse_expression(self, expr_str, var_ctx=None):
         """
         Recursively parses a logical expression string into Z3 objects.
@@ -110,12 +137,18 @@ class Z3Ontology(Ontology):
             quantifier, inner = expr_str.split('(', 1)
             args = inner.rsplit(')', 1)[0]
             var_part, body_part = args.split(',', 1)
-            var_name = var_part.strip()
-            var = var_ctx.get(var_name)
-            if var is None:
-                # If not in context, create a new constant
-                var = Const(var_name, Ind)
-            return LOGICAL_OPS[quantifier](var, self._parse_expression(body_part.strip(), {**var_ctx, var_name: var}))
+            var_names = [v.strip() for v in var_part.strip("[] ").split(',')]
+
+            # Infer sorts based on usage in body
+            self._infer_var_sorts(body_part.strip(), var_ctx)
+
+            vars = []
+            for var_name in var_names:
+                if var_name not in var_ctx:
+                    var_ctx[var_name] = Const(var_name, Ind)  # default if not inferred
+                vars.append(var_ctx[var_name])
+
+            return LOGICAL_OPS[quantifier](vars, self._parse_expression(body_part.strip(), {**var_ctx}))
         
         # Binary comparison operators
         for op in ['>=', '<=', '==', '>', '<', '=']:
@@ -203,13 +236,98 @@ class Z3Ontology(Ontology):
 PSL_ONTOLOGY_JSON = {
     'axioms': [
     {
-    'name' : '',
-    'description' : '',
-    'axiom' : ''
+    'name' : 'type_partition',
+    'description' : 'All objects are either activities, occurrences, objects, events, or transitions.',
+    'axiom' : 'ForAll(x, Or(activity(x), activity_occurrence(x), object_(x), event(x), transition(x))'
+    },
+    {
+    'name' : 'type_disjointness',
+    'description' : 'activities, occurrences, objects, events, and transitions are different things.',
+    'axiom' : '''ForAll(x, And(
+    Implies(activity(x), Not(Or(activity_occurrence(x), object_(x), event(x), transition(x)))),
+    Implies(activity_occurrence(x), Not(Or(object_(x), activity(x), event(x), transition(x)))),
+    Implies(object_(x), Not(Or(activity_occurrence(x), activity(x), event(x), transition(x)))),
+    Implies(event(x), Not(Or(activity_occurrence(x), activity(x), object_(x), transition(x)))),
+    Implies(transition(x), Not(Or(activity_occurrence(x), activity(x), object_(x), event(x))))))'''
+    },
+    {
+    'name' : 'begin_unique',
+    'description' : 'Start points are unique.',
+    'axiom' : 'ForAll([x, t1, t2], Implies(And(begin_of(x, t1), begin_of(x, t2)), t1 == t2))'
+    },
+    {
+    'name' : 'ends_unique',
+    'description' : 'End points are unique.',
+    'axiom' : 'ForAll([x, t1, t2], Implies(And(end_of(x, t1), end_of(x, t2)), t1 == t2))'
+    },
+    {
+    'name' : 'occurrence_bounds',
+    'description' : 'Activity occurrence start points are before or equal to their end points.',
+    'axiom' : '''ForAll(o, Implies(
+        activity_occurrence(o),
+        Exists([t1, t2], And(
+            begin_of(o, t1),
+            end_of(o, t2),
+            t1 <= t2
+        ))))'''
+    },
+    {
+    'name' : 'occurrence_sort_constraints',
+    'description' : 'Occurrences are the occurrences of activities.',
+    'axiom' : 'ForAll([a, o], Implies(occurrence_of(o,a), And(activity_occurrence(o), activity(a))))'
+    },
+    {
+    'name' : 'unique_activity_occurrence',
+    'description' : 'Activity occurrences are an occurrence of a single unique activity.',
+    'axiom' : '''ForAll([o, a1, a2], Implies(And(occurrence_of(o, a1), occurrence_of(o, a2)), a1 == a2))'''
+    },
+    {
+    'name': 'occurrence_has_activity',
+    'description': 'Every activity occurrence is the occurrence of some activity.',
+    'axiom': '''ForAll(occ, Implies(
+        activity_occurrence(occ),
+        Exists(a, And(
+            activity(a),
+            occurrence_of(occ, a)))))'''
     },
     
-    ], 
-    'ground': [
-    {'predicate': 'transition', 'terms': ['start'], 'positive': True},
-    {'predicate': 'transition', 'terms': ['complete'], 'positive': True},
+    
     ]}
+    
+    
+PSL_MAPPING_JSON = {
+        'axioms': [
+            {'name': 'occurrence_start_end_event_mapping',
+            'description': 'Maps start and complete events to activity occurrences.',
+            'axiom': '''
+            ForAll([e1, e2, t1, t2, c, a],
+                Implies(
+                    And(
+                        hasCase(e1, c),
+                        hasCase(e2, c),
+                        hasActivity(e1, a),
+                        hasActivity(e2, a),
+                        hasLifecycleTransition(e1, start),
+                        hasLifecycleTransition(e2, complete),
+                        hasRecordedTime(e1, t1),
+                        hasRecordedTime(e2, t2)
+                    ),
+                    Exists([o],
+                        And(
+                            occurrence_of(o, a),
+                            begin_of(o, t1),
+                            end_of(o, t2),
+                            subactivity_occurrence(o, c),
+                            o != c 
+                        )
+                    )
+                )
+            )
+            '''
+            },
+        ],
+    'ground': [
+        {'predicate': 'transition', 'terms': ['start'], 'positive': True},
+        {'predicate': 'transition', 'terms': ['complete'], 'positive': True},
+    ]
+}

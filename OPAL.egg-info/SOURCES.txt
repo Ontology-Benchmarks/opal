@@ -19,6 +19,7 @@ opal/logic/base/base_ontology.py
 opal/logic/base/base_reasoner.py
 opal/logic/base/base_sentence.py
 opal/logic/z3/__init__.py
+opal/logic/z3/z3_handler.py
 opal/logic/z3/z3_literal.py
 opal/logic/z3/z3_ontology.py
 opal/logic/z3/z3_pattern.py

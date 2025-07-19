@@ -8,7 +8,8 @@ Ind = DeclareSort('Ind')
 # define a register for functions, with temporal functions predefined
 SIGNATURE_REGISTER = {'hasRecordedTime' : Function('hasRecordedTime', Ind, RealSort()),
     'begin_of' : Function('begin_of', Ind, RealSort()),
-    'end_of' : Function('end_of', Ind, RealSort()),}
+    'end_of' : Function('end_of', Ind, RealSort()),
+    'timepoint' : Function('timepoint', RealSort(), BoolSort()),}
 
 IND_REGISTER = {}
     
