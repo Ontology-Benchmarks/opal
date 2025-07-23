@@ -27,4 +27,4 @@ Release notes are tracked in the CHANGELOG.md file of this repository.
 
 Contact
 ------------
-Please feel free to reach out with comments and feedback to riley.moher@mail.utoronto.ca
+Please feel free to reach out with comments, questions, and feedback to riley.moher@mail.utoronto.ca
