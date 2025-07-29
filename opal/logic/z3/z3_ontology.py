@@ -8,6 +8,7 @@ import re
 # This dictionary maps logical operation names (as captured in the ontology JSON) to their corresponding Z3 functions
 LOGICAL_OPS = {
     'ForAll': lambda var, body: ForAll(var, body),
+    'Iff': lambda a, b: (a) == (b),
     'Exists': lambda var, body: Exists(var, body),
     'And': And,
     'Or': Or,
@@ -122,7 +123,7 @@ class Z3Ontology(Ontology):
         
         Args:
             expr_str (str): The expression string to parse
-            var_ctx (dict): Context mapping variable names to Z3 objects
+            var_ctx (dict): Context dictionary mapping variable names to Z3 objects
             
         Returns:
             Z3 expression object
@@ -233,7 +234,7 @@ class Z3Ontology(Ontology):
 
 
 
-PSL_ONTOLOGY_JSON = {
+PSL_CORE_JSON = {
     'axioms': [
     {
     'name' : 'type_partition',
@@ -290,6 +291,51 @@ PSL_ONTOLOGY_JSON = {
             activity(a),
             occurrence_of(occ, a)))))'''
     },
+    {
+    'name': 'participation_sort_constraints',
+    'description': 'The participates_in relation only holds between objects, activity occurrences, and timepoints, respectively.',
+    'axiom': '''ForAll([x, occ, t], Implies(
+        participates_in(x, occ, t),
+        And(object(x), activity_occurrence(occ), timepoint(t))))'''
+    },
+    {
+    'name': 'participation_temporal_constraint',
+    'description': 'An object can participate in an activity occurrence only at those timepoints at which both the object exists and the activity is occurring.',
+    'axiom': '''ForAll([x, occ, t], Implies(
+        participates_in(x, occ, t),
+        And(
+            exists_at(x, t),
+            is_occurring_at(occ, t)
+        )))'''
+    },
+    {
+    'name': 'object_temporal_existence',
+    'description': 'An object exists at a timepoint t if and only if t is between or equal to its begin and end points.',
+    'axiom': '''ForAll([x, t], Iff(
+        exists_at(x, t),
+        And(
+            object(x),
+            begin_of(x) <= t <= end_of(x)
+        )))'''
+    },
+    {
+    'name': 'occurrence_temporal_extent',
+    'description': 'An activity is occurring at a timepoint t if and only if t is between or equal to the begin and end points of the activity occurrence.',
+    'axiom': '''ForAll([occ, t], Iff(
+        is_occurring_at(occ, t),
+        And(
+            activity_occurrence(occ),
+            begin_of(occ) <= t <= end_of(occ)
+        )))'''
+}
+
+
+    
+    
+
+    
+
+    
     
     
     ]}
