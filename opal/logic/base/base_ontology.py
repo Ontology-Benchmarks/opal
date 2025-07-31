@@ -11,8 +11,10 @@ class Ontology:
         Initializes a new instance of the Ontology class.
         This constructor is intended to be called by subclasses to set up the ontology.
         """
-        # Initialize any necessary attributes or structures here
-        pass
+        # Initialize axioms, individuals, and signature as empty lists or dictionaries
+        self._axioms = []
+        self._individuals = {}
+        self._signature = {}
     
     def from_txt(self, text):
         """
