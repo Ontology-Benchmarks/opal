@@ -1,9 +1,9 @@
 from opal.logic.base.base_literal import Literal
 from z3 import Function, StringVal, BoolSort, RealSort, Not, DeclareSort, RealVal, Const
 import typing
+# TODO: later redefine this so it retrieves the signature and individual registers from the ontology
+from opal.logic.z3.z3_handler import SIGNATURE_REGISTER, IND_REGISTER, Ind
 
-
-    
 
 class Z3Literal(Literal):
     """A concrete subclass of Literal that uses Z3 expressions."""
@@ -11,8 +11,8 @@ class Z3Literal(Literal):
     def __init__(self, predicate: str, terms: typing.Iterable = None, positive: bool = True):
         super().__init__(predicate, terms, positive)
         self._z3_expr = self._build_z3_expr()
-    
-    def _build_z3_expr(self, sig_ctx: typing.Dict[str, Function], ind_ctx: typing.Dict[str, Const], ind_type):
+
+    def _build_z3_expr(self, sig_ctx: typing.Dict[str, Function] = SIGNATURE_REGISTER, ind_ctx: typing.Dict[str, Const] = IND_REGISTER, ind_type=Ind):
         """Builds the Z3 expression for this literal."""
         # check if the predicate is registered in the signature
         if self.predicate in sig_ctx:

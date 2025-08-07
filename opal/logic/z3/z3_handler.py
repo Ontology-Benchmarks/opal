@@ -11,5 +11,5 @@ SIGNATURE_REGISTER = {'hasRecordedTime' : Function('hasRecordedTime', Ind, RealS
     'end_of' : Function('end_of', Ind, RealSort()),
     'timepoint' : Function('timepoint', RealSort(), BoolSort()),}
 
-IND_REGISTER = {}
-    
+IND_REGISTER = {'T_start' : Const('T_start', Ind),
+    'T_complete' : Const('T_complete', Ind),}

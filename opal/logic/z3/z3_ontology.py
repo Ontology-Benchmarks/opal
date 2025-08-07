@@ -57,15 +57,16 @@ class Z3Ontology(Ontology):
             with open(smt2_str, 'r') as f:
                 smt2_str = f.read()
 
-        # Segment smt2 string into axioms and signature/declarations
+        # extract named assertions from the smt2 string
+        assertions = cls.extract_named_assertions(smt2_str)
+        
 
-
-        for i, axiom in enumerate(assertions):
+        for i, assertion in enumerate(assertions):
             # Parse the axiom expression
-            a_name = f"ont_t_{i}_{axiom['name']}"
+            a_name = f"ont_t_{i}_{assertion['name']}"
             print(f"Adding axiom: {a_name}")
-            a_description = axiom['description']
-            expr = ontology._parse_expression(axiom['axiom'])
+            a_description = assertion['description']
+            expr = assertion['formula']
             axiom_dict = {
             'name': a_name,
             'description': a_description,
@@ -73,7 +74,7 @@ class Z3Ontology(Ontology):
             }
             ontology.add_axiom(axiom_dict)
             
-        for i,ground in enumerate(ontology_json['ground']):
+        for i,ground in enumerate(ground):
             # Parse the ground literal
             predicate = ground['predicate']
             terms = ground.get('terms', [])
@@ -85,6 +86,32 @@ class Z3Ontology(Ontology):
             
         
         return ontology
+    
+    @staticmethod
+    def extract_named_assertions(smtlib_str):
+        pattern = re.compile(
+            r'\(assert\s+\(!\s*(.*?)\)\)', re.DOTALL
+        )
+
+        assertions = []
+        for match in pattern.finditer(smtlib_str):
+            full_block = match.group(0)
+            inner = match.group(1)
+
+            # Find attributes (e.g., :named, :description)
+            named_match = re.search(r':named\s+(\w+)', inner)
+            desc_match = re.search(r':description\s+"(.*?)"', inner)
+
+            name = named_match.group(1) if named_match else None
+            description = desc_match.group(1) if desc_match else None
+
+            assertions.append({
+                'name': name,
+                'description': description,
+                'formula': full_block
+            })
+
+        return assertions
     
     def _is_temporal_variable(self, var_name):
         """
@@ -135,14 +162,30 @@ class Z3Ontology(Ontology):
         return self._axioms
         
 
-PSL_SMT2 = '''
+REFERENCE_TAXONOMY_SIG_SMT2 = '''
 (declare-sort Ind 0)
 
+(declare-fun Event (Ind) Bool)
+(declare-fun Transition (Ind) Bool)
+(declare-fun Activity (Ind) Bool)
+(declare-fun Case (Ind) Bool)
+(declare-fun Resource (Ind) Bool)
+(declare-fun hasResource (Ind Ind) Bool)
+(declare-fun hasRecordedTime (Ind Real) Bool)
+(declare-fun hasLifecycleTransition (Ind Ind) Bool)
+(declare-fun hasCase (Ind Ind) Bool)
+(declare-fun hasActivity (Ind Ind) Bool)
+
+
+; Declare individual constants for start and complete transitions
+(declare-const Ind T_start)
+(declare-const Ind T_complete)
+'''
+
+PSL_CORE_SIG_SMT2 = '''
 (declare-fun activity (Ind) Bool)
 (declare-fun activity_occurrence (Ind) Bool)
 (declare-fun object_ (Ind) Bool)
-(declare-fun event (Ind) Bool)
-(declare-fun transition (Ind) Bool)
 (declare-fun timepoint (Real) Bool)
 
 (declare-fun occurrence_of (Ind Ind) Bool)
@@ -152,27 +195,19 @@ PSL_SMT2 = '''
 
 (declare-fun begin_of (Ind) Real)
 (declare-fun end_of (Ind) Real)
+'''
 
-(assert (! 
-  (forall ((x Ind)) 
-    (or (activity x) (activity_occurrence x) (object_ x) (event x) (transition x))
-  )
-  :named type_partition
-  :description "All objects are either activities, occurrences, objects, events, or transitions."
-))
-
+PSL_CORE_SMT2 = '''
 (assert (! 
   (forall ((x Ind)) 
     (and
-      (=> (activity x) (not (or (activity_occurrence x) (object_ x) (event x) (transition x))))
-      (=> (activity_occurrence x) (not (or (object_ x) (activity x) (event x) (transition x))))
-      (=> (object_ x) (not (or (activity_occurrence x) (activity x) (event x) (transition x))))
-      (=> (event x) (not (or (activity_occurrence x) (activity x) (object_ x) (transition x))))
-      (=> (transition x) (not (or (activity_occurrence x) (activity x) (object_ x) (event x))))
+      (=> (activity x) (not (or (activity_occurrence x) (object_ x))))
+      (=> (activity_occurrence x) (not (or (object_ x) (activity x))))
+      (=> (object_ x) (not (or (activity_occurrence x) (activity x))))
     )
   )
   :named type_disjointness
-  :description "Activities, occurrences, objects, events, and transitions are different things."
+  :description "Activities, occurrences, and objects are different things."
 ))
 
 (assert (! 
@@ -276,23 +311,51 @@ PSL_SMT2 = '''
 ))
 '''
 
+PSL_CORE_MAPPING_SMT2 = '''
+assert (! 
+  (forall ((e1 Ind) (e2 Ind) (t1 Real) (t2 Real) (c Ind) (a Ind))
+    (=> (and
+      (hasCase e1 c)
+      (hasCase e2 c)
+      (hasActivity e1 a)
+      (hasActivity e2 a)
+      (hasLifecycleTransition e1 T_start)
+      (hasLifecycleTransition e2 T_complete)
+      (hasRecordedTime e1 t1)
+      (hasRecordedTime e2 t2)
+    )
+    (exists ((o Ind))
+      (and
+        (occurrence_of o a)
+        (= (begin_of o) t1)
+        (= (end_of o) t2)
+      )
+    )
+  )
+  :named occurrence_start_end_event_mapping
+  :description "Maps start and complete events to activity occurrences."
+
+  assert (! (transition T_start)
+  :named transition_start
+  :description "declaration of the start transition"
+
+  assert (! (transition T_complete))
+  :named transition_complete
+  :description "declaration of the complete transition"
+)
+'''
+
 
 PSL_CORE_JSON = {
     'axioms': [
     {
-    'name' : 'type_partition',
-    'description' : 'All objects are either activities, occurrences, objects, events, or transitions.',
-    'axiom' : 'ForAll([x], Or(activity(x), activity_occurrence(x), object_(x), event(x), transition(x))'
-    },
-    {
     'name' : 'type_disjointness',
-    'description' : 'activities, occurrences, objects, events, and transitions are different things.',
+    'description' : 'activities, occurrences, and objects are different things.',
     'axiom' : '''ForAll([x], And(
-    Implies(activity(x), Not(Or(activity_occurrence(x), object_(x), event(x), transition(x)))),
-    Implies(activity_occurrence(x), Not(Or(object_(x), activity(x), event(x), transition(x)))),
-    Implies(object_(x), Not(Or(activity_occurrence(x), activity(x), event(x), transition(x)))),
-    Implies(event(x), Not(Or(activity_occurrence(x), activity(x), object_(x), transition(x)))),
-    Implies(transition(x), Not(Or(activity_occurrence(x), activity(x), object_(x), event(x))))))'''
+    Implies(activity(x), Not(Or(activity_occurrence(x), object_(x)))),
+    Implies(activity_occurrence(x), Not(Or(object_(x), activity(x)))),
+    Implies(object_(x), Not(Or(activity_occurrence(x), activity(x)))),
+    '''
     },
     {
     'name' : 'begin_unique',
