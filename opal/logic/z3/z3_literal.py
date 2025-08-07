@@ -8,12 +8,18 @@ from opal.logic.z3.z3_handler import SIGNATURE_REGISTER, IND_REGISTER, Ind
 class Z3Literal(Literal):
     """A concrete subclass of Literal that uses Z3 expressions."""
     
-    def __init__(self, predicate: str, terms: typing.Iterable = None, positive: bool = True):
+    def __init__(self, predicate: str, terms: typing.Iterable = None, positive: bool = True, env: dict = None):
         super().__init__(predicate, terms, positive)
-        self._z3_expr = self._build_z3_expr()
+        self._z3_expr = self._build_z3_expr(env)
 
-    def _build_z3_expr(self, sig_ctx: typing.Dict[str, Function] = SIGNATURE_REGISTER, ind_ctx: typing.Dict[str, Const] = IND_REGISTER, ind_type=Ind):
+    def _build_z3_expr(self, env=None):
         """Builds the Z3 expression for this literal."""
+        
+        # Retrieve the signature and individual registers from the passed environment
+        sig_ctx = env['functions']
+        ind_ctx = env['constants']
+        ind_type = env['sorts']['Ind']
+
         # check if the predicate is registered in the signature
         if self.predicate in sig_ctx:
             func = sig_ctx[self.predicate]

@@ -1,5 +1,6 @@
 from opal.data.event_data import EventData
 from opal.logic.z3.z3_literal import Z3Literal
+from opal.logic.z3.z3_handler import REFERENCE_TAXONOMY_ENV
 
 import pandas as pd
 import numpy as np
@@ -323,7 +324,8 @@ class LogMapper:
                     o = strip_uri(str(o))
                 terms = [s,o]
                 
-            return Z3Literal(predicate=predicate, terms=terms)
+            # TODO: incorporate the environment     
+            return Z3Literal(predicate=predicate, terms=terms, env=None)
         
         # define helper to transform one kg into an array of Z3Literal objects
         def kg_to_z3_literals(kg):

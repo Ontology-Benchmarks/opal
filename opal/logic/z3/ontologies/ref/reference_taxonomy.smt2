@@ -13,5 +13,5 @@
 
 
 ; Declare individual constants for start and complete transitions
-(declare-const Ind T_start)
-(declare-const Ind T_complete)
+(declare-const T_start Ind)
+(declare-const T_complete Ind)
