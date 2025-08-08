@@ -3,8 +3,6 @@ from z3 import Function, BoolSort, RealSort, Not, DeclareSort, RealVal, Const, C
 import re
 import typing
 
-REFERENCE_TAXONOMY_PATH = '../../opal/logic/z3/ontologies/ref/reference_taxonomy.smt2'
-
 # define type for individuals
 Ind = DeclareSort('Ind')
 
@@ -16,7 +14,6 @@ SIGNATURE_REGISTER = {'hasRecordedTime' : Function('hasRecordedTime', Ind, RealS
 
 IND_REGISTER = {'T_start' : Const('T_start', Ind),
     'T_complete' : Const('T_complete', Ind),}
-
 
 def parse_smt2_declarations(smt2_str : str, ctx=None):
     if ctx is None:
@@ -47,7 +44,7 @@ def parse_smt2_declarations(smt2_str : str, ctx=None):
 
         z3_args = [get_sort(s) for s in arg_sorts]
         z3_ret = get_sort(ret_sort)
-        functions[fname] = Function(fname, *z3_args, z3_ret, ctx=ctx)
+        functions[fname] = Function(fname, *z3_args, z3_ret)
 
     # Match declare-const
     for match in re.finditer(r'\(declare-const\s+(\w+)\s+(\w+)\)', smt2_str):
@@ -61,7 +58,7 @@ def parse_smt2_declarations(smt2_str : str, ctx=None):
         else:
             z3_sort = sorts[csort]
 
-        constants[cname] = Const(cname, z3_sort, ctx=ctx)
+        constants[cname] = Const(cname, z3_sort)
 
     return {
         "ctx": ctx,
@@ -69,3 +66,7 @@ def parse_smt2_declarations(smt2_str : str, ctx=None):
         "functions": functions,
         "constants": constants
     }
+    
+REFERENCE_TAXONOMY_PATH = '../../opal/logic/z3/ontologies/ref/reference_taxonomy.smt2'
+with open(REFERENCE_TAXONOMY_PATH, 'r') as f:
+    REFERENCE_TAXONOMY_ENV = parse_smt2_declarations(f.read())

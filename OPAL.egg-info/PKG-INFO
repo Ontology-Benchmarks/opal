@@ -26,14 +26,12 @@ Requires-Dist: twine>=4.0.2; extra == "dev"
 
 OPAL is a library designed to enable ontology-driven process mining. Ontology-driven process mining is meant to formalize process knowledge applied throughout the process mining lifecycle to enable transparency and replicability. This is accomplished through *process meaning patterns*, first-order logic ontology patterns that correspond to common verification and inference steps in the process mining lifecycle. This repository contains an implementation of the process meaning pattern framework implemented in python and supporting exporting of process knowledge to various formats including OWL/RDF, First order logic via CLIF or Prover9 syntax, and prolog/datalog. 
 
-OPAL is actively maintaned and developed by [Riley Moher](https://riley-momo.github.io/) of the semantic technologies (stl) laboratory at the University of Toronto.
+OPAL is actively maintaned and developed by [Riley Moher](https://riley-momo.github.io/) of the semantic technologies laboratory (stl) at the University of Toronto.
 
 Example Usage
 ------------
 
-PLACEHOLDER
-
-More thorough examples, including an example utilizing real-world enterprise data, are available in the examples directory of this repository.
+The examples repository contains notebooks and example data that illustrate usage scenarios of the library. As the library is further expanded and developed, more examples will be added.
 
 
 Installation
@@ -49,3 +47,8 @@ Release Notes
 ------------
 
 Release notes are tracked in the CHANGELOG.md file of this repository.
+
+
+Contact
+------------
+Please feel free to reach out with comments, questions, and feedback to riley.moher@mail.utoronto.ca

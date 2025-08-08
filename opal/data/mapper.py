@@ -323,9 +323,8 @@ class LogMapper:
                 else:
                     o = strip_uri(str(o))
                 terms = [s,o]
-                
-            # TODO: incorporate the environment     
-            return Z3Literal(predicate=predicate, terms=terms, env=None)
+                 
+            return Z3Literal(predicate=predicate, terms=terms, env=REFERENCE_TAXONOMY_ENV)
         
         # define helper to transform one kg into an array of Z3Literal objects
         def kg_to_z3_literals(kg):

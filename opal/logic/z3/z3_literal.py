@@ -10,12 +10,14 @@ class Z3Literal(Literal):
     
     def __init__(self, predicate: str, terms: typing.Iterable = None, positive: bool = True, env: dict = None):
         super().__init__(predicate, terms, positive)
-        self._z3_expr = self._build_z3_expr(env)
+        self._env = env if env is not None else {}
+        self._z3_expr = self._build_z3_expr(self._env)
 
     def _build_z3_expr(self, env=None):
         """Builds the Z3 expression for this literal."""
         
-        # Retrieve the signature and individual registers from the passed environment
+        # Retrieve the signature and individual registers from the passed environment/context
+        ctx = env['ctx']
         sig_ctx = env['functions']
         ind_ctx = env['constants']
         ind_type = env['sorts']['Ind']
@@ -25,7 +27,7 @@ class Z3Literal(Literal):
             func = sig_ctx[self.predicate]
         else:
             # If not registered, create a new function
-            func = Function(self.predicate, *([ind_type] * len(self.terms)), BoolSort())
+            func = Function(self.predicate, *([ind_type] * len(self.terms)), BoolSort(ctx))
             sig_ctx[self.predicate] = func
         
          # Get expected argument sorts from the function signature
@@ -34,7 +36,7 @@ class Z3Literal(Literal):
         return_sort = func.range()
         
         # check if the return sort is BoolSort (meaning it's a predicate)
-        is_predicate = return_sort == BoolSort()
+        is_predicate = return_sort == BoolSort(ctx)
         expected_term_count = arity + (0 if is_predicate else 1)  # +1 if it's a predicate, otherwise just arity
         
 
@@ -48,9 +50,9 @@ class Z3Literal(Literal):
                 if term not in ind_ctx:
                     ind_ctx[term] = Const(term, ind_type)
                 z3_args.append(ind_ctx[term])
-            elif expected_sort == RealSort(): 
+            elif expected_sort == RealSort(ctx): 
                 # Convert term to real value (expecting numeric)
-                z3_args.append(RealVal(term))
+                z3_args.append(RealVal(term, ctx))
             else:
                 raise TypeError(f"Unsupported sort {expected_sort} for term '{term}'")
                 
@@ -60,12 +62,15 @@ class Z3Literal(Literal):
         else:
             target_terms = z3_args
             target_val = self.terms[-1]
+            # If target_val is numeric, make sure it's in ctx too
+            if expected_sort == RealSort(ctx):
+                target_val = RealVal(target_val, ctx)
             expr = func(*target_terms) == target_val
-        
+
         # If the literal is negative, negate the expression
         if not self.positive:
             expr = Not(expr)
-        
+
         return expr
     
     @property
