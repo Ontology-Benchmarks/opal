@@ -1,5 +1,6 @@
 from opal.logic.base.base_ontology import Ontology
 from opal.logic.z3.z3_literal import Z3Literal
+from opal.logic.z3.z3_handler import parse_smt2_declarations, REFERENCE_TAXONOMY_ENV
 from z3 import Function, BoolSort, RealSort, Not, DeclareSort, RealVal, Const, ForAll, Exists, And, Or, Implies
 from z3 import parse_smt2_string, Z3Exception
 import re
@@ -42,11 +43,16 @@ class Z3Ontology(Ontology):
         Loads the ontology from a SMT-LIB representation.
 
         Args:
-            smt2_str (str): The SMT-LIB text representation of the ontology, or a path to the SMT-LIB file.
+            ontology_str (str): The SMT-LIB text representation of the ontology, or a path to the SMT-LIB file.
+            
+            mapping (str): The SMT-LIB text representation of the mapping (from the language of the reference taxonomy into the language of the ontology),
+            or a path to the SMT-LIB file.
+
         Returns:
             self: The current instance of the ontology.
         """
         ontology = cls()
+        ontology._env = REFERENCE_TAXONOMY_ENV
 
         # Check if the input is a file path or a string
         if ontology_str.endswith('.smt2'):
@@ -71,7 +77,9 @@ class Z3Ontology(Ontology):
         
         # Parse the remaining SMT-LIB string to extract additional non-assertion statements (declarations, signature, etc.)
         remaining_str = ont_str_other + map_str_other
-        parse_smt2_string(remaining_str, )
+        # update the extracted environment to the ontology
+        env = parse_smt2_declarations(remaining_str, env = ontology._env)
+        ontology._env = env
 
         return ontology
       
@@ -103,7 +111,7 @@ class Z3Ontology(Ontology):
             terms = assertion.get('terms', [])
             positive = assertion.get('positive', True)
             name = f"{prefix}_a_{i}_{predicate}({terms})"
-            ontology.add_literal({name: Z3Literal(predicate, terms, positive)})
+            ontology.add_literal({name : Z3Literal(predicate, terms, positive)})
 
     
     @staticmethod
