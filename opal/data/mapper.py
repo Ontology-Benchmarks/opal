@@ -297,10 +297,14 @@ class LogMapper:
         
         return dl_facts
 
-    def generate_z3(self):
+    def generate_z3(self, environment : dict = REFERENCE_TAXONOMY_ENV):
         """
         Generates a Z3 representation of the log
         """
+        
+        # set the z3 environment
+        self._z3_env = environment
+        
         # define helper function to strip URIs
         strip_uri = lambda x: re.sub(r".*/", '', x)
         
@@ -324,7 +328,7 @@ class LogMapper:
                     o = strip_uri(str(o))
                 terms = [s,o]
                  
-            return Z3Literal(predicate=predicate, terms=terms, env=REFERENCE_TAXONOMY_ENV)
+            return Z3Literal(predicate=predicate, terms=terms, env=self._z3_env)
         
         # define helper to transform one kg into an array of Z3Literal objects
         def kg_to_z3_literals(kg):

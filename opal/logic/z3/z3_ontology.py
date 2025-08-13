@@ -36,6 +36,8 @@ class Z3Ontology(Ontology):
         Initializes a new instance of the Z3Ontology class.
         """
         super().__init__()
+        # initialize the environment according to the reference taxonomy
+        self._env = REFERENCE_TAXONOMY_ENV
     
     @classmethod
     def from_smt2(cls, ontology_str, mapping):
@@ -52,7 +54,7 @@ class Z3Ontology(Ontology):
             self: The current instance of the ontology.
         """
         ontology = cls()
-        ontology._env = REFERENCE_TAXONOMY_ENV
+        
 
         # Check if the input is a file path or a string
         if ontology_str.endswith('.smt2'):
@@ -83,7 +85,16 @@ class Z3Ontology(Ontology):
 
         return ontology
       
-      
+    def load_additional_smt2(self, smt2_str):
+        """
+        Loads additional SMT-LIB2 declarations into the ontology.
+
+        Args:
+            smt2_str (str): The SMT-LIB2 string to parse.
+        """
+        env = parse_smt2_declarations(smt2_str, env=self._env)
+        self._env = env
+        
     @staticmethod
     def _load_assertions_from_smtlib(smtlib_str):
         named_assertions, remaining_str = Z3Ontology.extract_named_assertions(smtlib_str)
@@ -384,132 +395,3 @@ assert (!
   :description "declaration of the complete transition"
 )
 '''
-
-
-PSL_CORE_JSON = {
-    'axioms': [
-    {
-    'name' : 'type_disjointness',
-    'description' : 'activities, occurrences, and objects are different things.',
-    'axiom' : '''ForAll([x], And(
-    Implies(activity(x), Not(Or(activity_occurrence(x), object_(x)))),
-    Implies(activity_occurrence(x), Not(Or(object_(x), activity(x)))),
-    Implies(object_(x), Not(Or(activity_occurrence(x), activity(x)))),
-    '''
-    },
-    {
-    'name' : 'begin_unique',
-    'description' : 'Start points are unique.',
-    'axiom' : 'ForAll([x, t1, t2], Implies(And(begin_of(x) = t1, begin_of(x) = t2), (t1 = t2)))'
-    },
-    {
-    'name' : 'ends_unique',
-    'description' : 'End points are unique.',
-    'axiom' : 'ForAll([x, t1, t2], Implies(And(end_of(x) = t1, end_of(x) = t2), (t1 = t2)))'
-    },
-    {
-    'name' : 'occurrence_bounds',
-    'description' : 'Activity occurrence start points are before or equal to their end points.',
-    'axiom' : '''ForAll([o], Implies(
-        activity_occurrence(o),
-        Exists([t1, t2], And(
-            begin_of(o) = t1,
-            end_of(o) = t2,
-            t1 <= t2
-        ))))'''
-    },
-    {
-    'name' : 'occurrence_sort_constraints',
-    'description' : 'Occurrences are the occurrences of activities.',
-    'axiom' : 'ForAll([a, o], Implies(occurrence_of(o,a), And(activity_occurrence(o), activity(a))))'
-    },
-    {
-    'name' : 'unique_activity_occurrence',
-    'description' : 'Activity occurrences are an occurrence of a single unique activity.',
-    'axiom' : '''ForAll([o, a1, a2], Implies(And(occurrence_of(o, a1), occurrence_of(o, a2)), a1 = a2))'''
-    },
-    {
-    'name': 'occurrence_has_activity',
-    'description': 'Every activity occurrence is the occurrence of some activity.',
-    'axiom': '''ForAll([occ], Implies(
-        activity_occurrence(occ),
-        Exists([a], And(
-            activity(a),
-            occurrence_of(occ, a)))))'''
-    },
-    {
-    'name': 'participation_sort_constraints',
-    'description': 'The participates_in relation only holds between objects, activity occurrences, and timepoints, respectively.',
-    'axiom': '''ForAll([x, occ, t], Implies(
-        participates_in(x, occ, t),
-        And(object(x), activity_occurrence(occ), timepoint(t))))'''
-    },
-    {
-    'name': 'participation_temporal_constraint',
-    'description': 'An object can participate in an activity occurrence only at those timepoints at which both the object exists and the activity is occurring.',
-    'axiom': '''ForAll([x, occ, t], Implies(
-        participates_in(x, occ, t),
-        And(
-            exists_at(x, t),
-            is_occurring_at(occ, t)
-        )))'''
-    },
-    {
-    'name': 'object_temporal_existence',
-    'description': 'An object exists at a timepoint t if and only if t is between or equal to its begin and end points.',
-    'axiom': '''ForAll([x, t], Iff(
-        exists_at(x, t),
-        And(
-            object(x),
-            begin_of(x) <= t <= end_of(x)
-        )))'''
-    },
-    {
-    'name': 'occurrence_temporal_extent',
-    'description': 'An activity is occurring at a timepoint t if and only if t is between or equal to the begin and end points of the activity occurrence.',
-    'axiom': '''ForAll([occ, t], Iff(
-        is_occurring_at(occ, t),
-        And(
-            activity_occurrence(occ),
-            begin_of(occ) <= t <= end_of(occ)
-        )))'''
-    }
-    ]}
-    
-    
-PSL_MAPPING_JSON = {
-        'axioms': [
-            {'name': 'occurrence_start_end_event_mapping',
-            'description': 'Maps start and complete events to activity occurrences.',
-            'axiom': '''
-            ForAll([e1, e2, t1, t2, c, a],
-                Implies(
-                    And(
-                        hasCase(e1, c),
-                        hasCase(e2, c),
-                        hasActivity(e1, a),
-                        hasActivity(e2, a),
-                        hasLifecycleTransition(e1, start),
-                        hasLifecycleTransition(e2, complete),
-                        hasRecordedTime(e1, t1),
-                        hasRecordedTime(e2, t2)
-                    ),
-                    Exists([o],
-                        And(
-                            occurrence_of(o, a),
-                            begin_of(o, t1),
-                            end_of(o, t2),
-                            subactivity_occurrence(o, c),
-                            o != c 
-                        )
-                    )
-                )
-            )
-            '''
-            },
-        ],
-    'ground': [
-        {'predicate': 'transition', 'terms': ['start'], 'positive': True},
-        {'predicate': 'transition', 'terms': ['complete'], 'positive': True},
-    ]
-}

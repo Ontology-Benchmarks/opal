@@ -1,8 +1,7 @@
 from opal.logic.base.base_literal import Literal
 from z3 import Function, StringVal, BoolSort, RealSort, Not, DeclareSort, RealVal, Const
 import typing
-# TODO: later redefine this so it retrieves the signature and individual registers from the ontology
-from opal.logic.z3.z3_handler import SIGNATURE_REGISTER, IND_REGISTER, Ind
+from opal.logic.z3.z3_handler import REFERENCE_TAXONOMY_ENV
 
 
 class Z3Literal(Literal):

@@ -4,6 +4,16 @@ import re
 import typing
 
 def parse_smt2_declarations(smt2_str : str, env=None):
+    '''
+    A function to parse SMT-LIB2 declarations from a string
+
+    Args:
+        smt2_str (str): The SMT-LIB2 string to parse.
+        env (dict, optional): The environment to use for parsing - this will be updated in the returned dictionary. If None, a new environment will be created.
+
+    Returns:
+        dict: The environment dictionary containing the parsed declarations as Z3 context, sorts, functions, and constants.
+    '''
     if env is None:
         env = {}
         env['ctx'] = Context()
@@ -63,7 +73,17 @@ def parse_smt2_declarations(smt2_str : str, env=None):
         "functions": functions,
         "constants": constants
     }
-    
+
+# TODO: Structure the loading of the environments in a cleaner and more modular fashion
+
 REFERENCE_TAXONOMY_PATH = '../../opal/logic/z3/ontologies/ref/reference_taxonomy.smt2'
 with open(REFERENCE_TAXONOMY_PATH, 'r') as f:
     REFERENCE_TAXONOMY_ENV = parse_smt2_declarations(f.read())
+
+PSL_CORE_PATH = '../../opal/logic/z3/ontologies/PSL/psl_core.smt2'
+with open(PSL_CORE_PATH, 'r') as f:
+    PSL_CORE_ENV = parse_smt2_declarations(f.read(), REFERENCE_TAXONOMY_ENV)
+
+PSL_CORE_MAPPING_PATH = '../../opal/logic/z3/ontologies/PSL/psl_core_mapping.smt2'
+with open(PSL_CORE_MAPPING_PATH, 'r') as f:
+    PSL_CORE_MAPPING_ENV = parse_smt2_declarations(f.read(), PSL_CORE_ENV)
