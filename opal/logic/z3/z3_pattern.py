@@ -4,7 +4,7 @@ from z3 import parse_smt2_string
 import re
 
 class Z3Pattern:
-    def __init__(self, args: dict, pattern_str: str):
+    def __init__(self, args: dict, pattern_str: str, pattern_name: str):
         """
         Initialize a Z3 pattern.
         
@@ -15,6 +15,7 @@ class Z3Pattern:
         """
         self.args = args
         self.pattern_str = pattern_str
+        self.name = pattern_name
         self._validate_pattern()
     
     def _validate_pattern(self):
@@ -45,7 +46,7 @@ class Z3Pattern:
         result = self.pattern_str.format(**kwargs)
         return result
     
-    def create_z3_expr(self, env, **kwargs):
+    def create_z3_expr(self, **kwargs):
         """
         Create a Z3 expression from the pattern string using the provided environment.
         
@@ -57,7 +58,7 @@ class Z3Pattern:
             Z3 expression object
         """
         smt2_string = self.apply(**kwargs)
-        return parse_smt2_string(smt2_string, ctx=env.get('ctx', None))
+        return smt2_string
     
     def get_arg_descriptions(self):
         """
@@ -95,7 +96,8 @@ HAND_OFF_PATTERN = Z3Pattern(
             (not (= r1 r2))
         )
     )
-))"""
+))""",
+pattern_name="Hand-off"
 )
 
 PING_PONG_PATTERN = Z3Pattern(
@@ -114,7 +116,8 @@ PING_PONG_PATTERN = Z3Pattern(
             )
         )
     )
-))"""
+))""",
+pattern_name='Ping-pong'
 )
 
 # Query pattern to find all instances of ping-pong behavior
