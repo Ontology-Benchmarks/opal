@@ -1,4 +1,4 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.1
 Name: OPAL
 Version: 0.10
 Summary: An app to map event logs into ontology-based process knowledge and analyze the data through a library of knowledge patterns
@@ -21,17 +21,6 @@ Requires-Dist: yatter
 Requires-Dist: ruamel.yaml
 Provides-Extra: dev
 Requires-Dist: twine>=4.0.2; extra == "dev"
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: license
-Dynamic: provides-extra
-Dynamic: requires-dist
-Dynamic: requires-python
-Dynamic: summary
 
 # Ontology-driven Process Analysis engine (OPAL)
 

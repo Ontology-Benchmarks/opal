@@ -1,6 +1,7 @@
 from opal.logic.base.base_literal import Literal
 from z3 import Function, BoolSort, RealSort, Not, DeclareSort, RealVal, Const, Context
 import re
+import sexpdata
 import typing
 
 def parse_smt2_declarations(smt2_str : str, env=None):

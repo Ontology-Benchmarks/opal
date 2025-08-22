@@ -17,15 +17,14 @@
         (= (end_of o) t2)
       )
     )
-  )))
+  ))
   :named occurrence_start_end_event_mapping
-  :description "Maps start and complete events to activity occurrences.")
+  :description "Maps start and complete events to activity occurrences."))
 
   (assert (! (transition T_start)
   :named transition_start
-  :description "declaration of the start transition")
+  :description "declaration of the start transition"))
 
-  (assert (! (transition T_complete))
+  (assert (! (transition T_complete)
   :named transition_complete
-  :description "declaration of the complete transition")
-)
+  :description "declaration of the complete transition"))

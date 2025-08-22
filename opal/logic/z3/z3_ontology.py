@@ -4,6 +4,7 @@ from opal.logic.z3.z3_handler import parse_smt2_declarations, REFERENCE_TAXONOMY
 from z3 import Function, BoolSort, RealSort, Not, DeclareSort, RealVal, Const, ForAll, Exists, And, Or, Implies
 from z3 import parse_smt2_string, Z3Exception
 import re
+import sexpdata
 
 class Z3Ontology(Ontology):
     """
@@ -98,54 +99,96 @@ class Z3Ontology(Ontology):
                 'expr': assertion['formula']
             })
 
+    @staticmethod
+    def parse_ground_assertion(smtlib_str):
+      expr = sexpdata.loads(smtlib_str)
+
+      # expr looks like: ['assert', ['!', ['transition', 'T_start'], ':named', 'transition_start', ':description', '...']]
+      if expr[0].value() != "assert":
+          raise ValueError("Not an assertion")
+
+      inner = expr[1]  # match on the (! ...)
+      if inner[0].value() != "!":
+          raise ValueError("Assertion not annotated")
+
+      formula = inner[1]   # inner part of ground formula (transition T_start)
+      
+      positive = True
+
+      # Check if the assertion is negated
+      if isinstance(formula, list) and formula[0].value() == "not":
+          positive = False
+          formula = formula[1]  # unwrap inner formula
+        
+      predicate = formula[0].value()
+      terms = [t.value() if isinstance(t, sexpdata.Symbol) else t for t in formula[1:]]
+
+      # get annotations
+      name = None
+      description = None
+      for i in range(2, len(inner), 2):
+          key = inner[i].value()
+          val = inner[i+1]
+          if key == ":named":
+              name = val.value() if isinstance(val, sexpdata.Symbol) else val
+          elif key == ":description":
+              description = val
+
+      return {
+          "predicate": predicate,
+          "terms": terms,
+          "name": name,
+          "description": description,
+          "positive": positive
+      }
+
     def _add_literals(self, assertions, prefix):
+      
         for i, assertion in enumerate(assertions):
-            predicate = assertion.get('predicate')
-            terms = assertion.get('terms', [])
-            positive = assertion.get('positive', True)
-            name = f"{prefix}_a_{i}_{predicate}({terms})"
+            parsed_assertion = self.parse_ground_assertion(assertion['formula'])
+            name = parsed_assertion['name']
+            name = f"{prefix}_a_{i}_{name}"
+            terms = parsed_assertion['terms']
+            predicate = parsed_assertion['predicate']
+            positive = parsed_assertion['positive']
+
             self.add_literal({name : Z3Literal(predicate, terms, positive, env=self._env)})
 
-    
     @staticmethod
     def extract_named_assertions(smtlib_str):
-        pattern = re.compile(
-        r'\(assert\s+\(!\s*(?P<formula>.*?)\s*:named\s+(?P<name>\S+)\s*:description\s+"(?P<desc>.*?)"\s*\)\)',
-        re.DOTALL
-    )
+      parsed = sexpdata.loads(f"({smtlib_str})")  # wrap in () to parse multiple top-level forms
 
-        assertions = []
-        spans_to_remove = []
+      assertions = []
+      remaining = []
 
-        for match in pattern.finditer(smtlib_str):
-            full_block = match.group(0)
-            inner = match.group(1)
-            spans_to_remove.append(match.span())
+      for expr in parsed:
+          if isinstance(expr, list) and expr and expr[0].value() == "assert":
+              inner = expr[1]  # (! ... )
+              if isinstance(inner, list) and inner[0].value() == "!":
+                  formula = inner[1]
+                  attrs = inner[2:]
 
-            # Find attributes (e.g., :named, :description)
-            named_match = re.search(r':named\s+(\w+)', inner)
-            desc_match = re.search(r':description\s+"(.*?)"', inner)
+                  name = None
+                  description = None
+                  for i in range(0, len(attrs), 2):
+                      key = attrs[i].value()
+                      val = attrs[i+1]
+                      if key == ":named":
+                          name = val.value()
+                      elif key == ":description":
+                          description = val
 
-            name = named_match.group(1) if named_match else None
-            description = desc_match.group(1) if desc_match else None
+                  assertions.append({
+                      "name": name,
+                      "description": description,
+                      "formula": sexpdata.dumps(expr)  # dump back to string
+                  })
+              else:
+                  remaining.append(sexpdata.dumps(expr))
+          else:
+              remaining.append(sexpdata.dumps(expr))
 
-            assertions.append({
-                'name': name,
-                'description': description,
-                'formula': full_block
-            })
-
-        # Remove matched spans from the original string
-        remaining_parts = []
-        last_index = 0
-        for start, end in spans_to_remove:
-            remaining_parts.append(smtlib_str[last_index:start])
-            last_index = end
-        remaining_parts.append(smtlib_str[last_index:])
-
-        remaining_str = ''.join(remaining_parts)
-
-        return assertions, remaining_str
+      return assertions, "\n".join(remaining)
     
     def _is_temporal_variable(self, var_name):
         """
