@@ -23,6 +23,7 @@ opal/logic/z3/z3_handler.py
 opal/logic/z3/z3_literal.py
 opal/logic/z3/z3_ontology.py
 opal/logic/z3/z3_pattern.py
+opal/logic/z3/z3_reasoner.py
 opal/logic/z3/z3_sentence.py
 opal/theorycrafter/__init__.py
 opal/theorycrafter/crafter.py

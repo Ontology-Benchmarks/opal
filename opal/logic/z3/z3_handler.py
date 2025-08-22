@@ -80,10 +80,10 @@ REFERENCE_TAXONOMY_PATH = '../../opal/logic/z3/ontologies/ref/reference_taxonomy
 with open(REFERENCE_TAXONOMY_PATH, 'r') as f:
     REFERENCE_TAXONOMY_ENV = parse_smt2_declarations(f.read())
 
-PSL_CORE_PATH = '../../opal/logic/z3/ontologies/PSL/psl_core.smt2'
+PSL_CORE_PATH = '../../opal/logic/z3/ontologies/PSL/PSL_core.smt2'
 with open(PSL_CORE_PATH, 'r') as f:
     PSL_CORE_ENV = parse_smt2_declarations(f.read(), REFERENCE_TAXONOMY_ENV)
 
-PSL_CORE_MAPPING_PATH = '../../opal/logic/z3/ontologies/PSL/psl_core_mapping.smt2'
+PSL_CORE_MAPPING_PATH = '../../opal/logic/z3/ontologies/PSL/PSL_core_mapping.smt2'
 with open(PSL_CORE_MAPPING_PATH, 'r') as f:
     PSL_CORE_MAPPING_ENV = parse_smt2_declarations(f.read(), PSL_CORE_ENV)

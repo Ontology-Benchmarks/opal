@@ -5,24 +5,6 @@ from z3 import Function, BoolSort, RealSort, Not, DeclareSort, RealVal, Const, F
 from z3 import parse_smt2_string, Z3Exception
 import re
 
-
-
-# This dictionary maps logical operation names (as captured in the ontology JSON) to their corresponding Z3 functions
-LOGICAL_OPS = {
-    'ForAll': lambda var, body: ForAll(var, body),
-    'Iff': lambda a, b: (a) == (b),
-    'Exists': lambda var, body: Exists(var, body),
-    'And': And,
-    'Or': Or,
-    'Not': Not,
-    'Implies': Implies,
-    '=': lambda a, b: a == b, 
-    '<': lambda a, b : a < b,
-    '<=': lambda a, b : a <= b,
-    '>': lambda a, b : a > b,
-    '>=': lambda a, b : a >= b,
-}
-
 class Z3Ontology(Ontology):
     """
     A concrete subclass of Ontology that uses Z3 for logical reasoning.
@@ -38,7 +20,9 @@ class Z3Ontology(Ontology):
         super().__init__()
         # initialize the environment according to the reference taxonomy
         self._env = REFERENCE_TAXONOMY_ENV
-    
+        self._axioms = []
+        self._literals = []
+
     @classmethod
     def from_smt2(cls, ontology_str, mapping):
         """
@@ -54,8 +38,7 @@ class Z3Ontology(Ontology):
             self: The current instance of the ontology.
         """
         ontology = cls()
-        
-
+      
         # Check if the input is a file path or a string
         if ontology_str.endswith('.smt2'):
             with open(ontology_str, 'r') as f:
@@ -68,20 +51,21 @@ class Z3Ontology(Ontology):
         # Parse the SMT-LIB string to extract all named assertions
         ont_axioms, ont_ground, ont_str_other = cls._load_assertions_from_smtlib(ontology_str)
         map_axioms, map_ground, map_str_other = cls._load_assertions_from_smtlib(mapping)
-
-        # Add the parsed assertions to the ontology
-        cls._add_axioms(ontology, ont_axioms, prefix="ont")
-        cls._add_literals(ontology, ont_ground, prefix="ont")
-        
-        # Add the mapping assertions to the ontology
-        cls._add_axioms(ontology, map_axioms, prefix="map")
-        cls._add_literals(ontology, map_ground, prefix="map")
         
         # Parse the remaining SMT-LIB string to extract additional non-assertion statements (declarations, signature, etc.)
         remaining_str = ont_str_other + map_str_other
+        
         # update the extracted environment to the ontology
         env = parse_smt2_declarations(remaining_str, env = ontology._env)
         ontology._env = env
+        
+        # Add the parsed assertions to the ontology
+        ontology._add_axioms(ont_axioms, prefix="ont")
+        ontology._add_literals(ont_ground, prefix="ont")
+
+        # Add the mapping assertions to the ontology
+        ontology._add_axioms(map_axioms, prefix="map")
+        ontology._add_literals(map_ground, prefix="map")
 
         return ontology
       
@@ -104,32 +88,31 @@ class Z3Ontology(Ontology):
 
         return axiom_assertions, ground_assertions, remaining_str
 
-    @staticmethod
-    def _add_axioms(ontology, assertions, prefix):
+    def _add_axioms(self, assertions, prefix):
         for i, assertion in enumerate(assertions):
             name = f"{prefix}_t_{i}_{assertion['name']}"
             print(f"Adding axiom: {name}")
-            ontology.add_axiom({
+            self.add_axiom({
                 'name': name,
                 'description': assertion['description'],
                 'expr': assertion['formula']
             })
 
-    @staticmethod
-    def _add_literals(ontology, assertions, prefix):
+    def _add_literals(self, assertions, prefix):
         for i, assertion in enumerate(assertions):
             predicate = assertion.get('predicate')
             terms = assertion.get('terms', [])
             positive = assertion.get('positive', True)
             name = f"{prefix}_a_{i}_{predicate}({terms})"
-            ontology.add_literal({name : Z3Literal(predicate, terms, positive)})
+            self.add_literal({name : Z3Literal(predicate, terms, positive, env=self._env)})
 
     
     @staticmethod
     def extract_named_assertions(smtlib_str):
         pattern = re.compile(
-            r'\(assert\s+\(!\s*(.*?)\)\)', re.DOTALL
-        )
+        r'\(assert\s+\(!\s*(?P<formula>.*?)\s*:named\s+(?P<name>\S+)\s*:description\s+"(?P<desc>.*?)"\s*\)\)',
+        re.DOTALL
+    )
 
         assertions = []
         spans_to_remove = []
@@ -192,7 +175,7 @@ class Z3Ontology(Ontology):
         Args:
             axiom (dictionary): The axiom to add
         """
-        self.axioms.append(axiom)
+        self._axioms.append(axiom)
 
     def add_literal(self, literal):
         """
@@ -200,7 +183,7 @@ class Z3Ontology(Ontology):
         Args:
             literal (dictionary): The literal to add
         """
-        self.literals.append(literal)
+        self._literals.append(literal)
     
     @property
     def axioms(self):
@@ -211,7 +194,16 @@ class Z3Ontology(Ontology):
             An iterable containing the axioms of the ontology.
         """
         return self._axioms
-        
+
+    @property
+    def literals(self):
+        """
+        Returns the literals of the ontology.
+
+        Returns:
+            An iterable containing the literals of the ontology.
+        """
+        return self._literals
 
 REFERENCE_TAXONOMY_SIG_SMT2 = '''
 (declare-sort Ind 0)
