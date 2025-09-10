@@ -88,7 +88,7 @@
 (assert (! 
   (forall ((x Ind) (occ Ind) (t Real)) 
     (=> (participates_in x occ t) 
-      (and (object x) (activity_occurrence occ) (timepoint t))
+      (and (object_ x) (activity_occurrence occ) (timepoint t))
     )
   )
   :named participation_sort_constraints
@@ -108,7 +108,7 @@
 (assert (! 
   (forall ((x Ind) (t Real)) 
     (= (exists_at x t) 
-      (and (object x) (<= (begin_of x) t) (<= t (end_of x)))
+      (and (object_ x) (<= (begin_of x) t) (<= t (end_of x)))
     )
   )
   :named object_temporal_existence

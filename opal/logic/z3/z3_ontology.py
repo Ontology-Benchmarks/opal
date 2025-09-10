@@ -247,6 +247,16 @@ class Z3Ontology(Ontology):
             An iterable containing the literals of the ontology.
         """
         return self._literals
+      
+    @property
+    def env(self):
+        """
+        Returns the environment of the ontology.
+
+        Returns:
+            The environment of the ontology.
+        """
+        return self._env
 
 REFERENCE_TAXONOMY_SIG_SMT2 = '''
 (declare-sort Ind 0)
