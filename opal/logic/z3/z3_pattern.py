@@ -78,6 +78,21 @@ class Z3Pattern:
 
 # Pattern definitions based on the formal definitions in the paper
 
+OCCURS_IN_CASE_PATTERN = Z3Pattern(
+    args={
+        "activity": "Name of the activity to check",
+        "case_id": "Case identifier to check within"
+    },
+    pattern_str="""
+(assert (exists ((e Ind))
+    (and
+        (hasActivity e {activity})
+        (hasCase e {case_id})
+    )
+))""",
+    pattern_name="Occurs in Case"
+)
+
 HAND_OFF_PATTERN = Z3Pattern(
     args={
         "r1": "First resource involved in the hand-off",
@@ -88,14 +103,14 @@ HAND_OFF_PATTERN = Z3Pattern(
     },
     pattern_str="""
 (assert (forall ((r1 Ind) (r2 Ind) (o1 Ind) (o2 Ind) (c Ind))
-    (iff (hand_off r1 r2 o1 o2 c)
-        (and
+    (=> (and
             (next_subOcc o1 o2 c)
             (participates r1 o1)
             (participates r2 o2)
             (not (= r1 r2))
         )
     )
+    (hand_off r1 r2 o1 o2 c)
 ))""",
 pattern_name="Hand-off"
 )
@@ -106,15 +121,14 @@ PING_PONG_PATTERN = Z3Pattern(
     },
     pattern_str="""
 (assert (forall ((c Ind))
-    (iff (ping_pong c)
-        (exists ((e1 Ind) (e2 Ind) (e3 Ind) (e4 Ind) (r1 Ind) (r2 Ind) (r3 Ind) (r4 Ind))
+    (=> (exists ((e1 Ind) (e2 Ind) (e3 Ind) (e4 Ind) (r1 Ind) (r2 Ind) (r3 Ind) (r4 Ind))
             (and
                 (hand_off r1 r2 e1 e2 c)
                 (hand_off r3 r4 e3 e4 c)
                 (not (= e1 e3))
                 (not (= e2 e4))
-            )
-        )
+            ))
+        (ping_pong c)
     )
 ))""",
 pattern_name='Ping-pong'

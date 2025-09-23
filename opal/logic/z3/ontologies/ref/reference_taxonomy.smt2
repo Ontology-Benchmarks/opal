@@ -15,3 +15,11 @@
 ; Declare individual constants for start and complete transitions
 (declare-const T_start Ind)
 (declare-const T_complete Ind)
+
+(assert (! (transition T_start)
+:named transition_start
+:description "declaration of the start transition"))
+
+(assert (! (transition T_complete)
+:named transition_complete
+:description "declaration of the complete transition"))

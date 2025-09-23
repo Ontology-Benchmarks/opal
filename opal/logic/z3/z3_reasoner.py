@@ -84,9 +84,16 @@ class Z3Reasoner(Reasoner):
         solver = Solver(ctx=ctx)
         solver.set(unsat_core=True)
         solver.set(completion=True)
-
+        
+        names = set()
         # add assertions
         for assertion in self.assertions:
+            # check for duplicate names/assertions
+            name = assertion['name']
+            if name in names:
+                raise ValueError(f"Duplicate assertion name: {name}")
+            names.add(name)
+            
             expr = parse_smt2_string(assertion['expr'], ctx=ctx, sorts=self.sorts, decls=self.decls)[0]
             solver.assert_and_track(expr, assertion['name'])
 

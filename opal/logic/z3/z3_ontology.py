@@ -14,18 +14,19 @@ class Z3Ontology(Ontology):
     for managing axioms, individuals, and the signature of the ontology.
     """
 
-    def __init__(self):
+    def __init__(self, name=None):
         """
         Initializes a new instance of the Z3Ontology class.
         """
-        super().__init__()
+        super().__init__(name=name)
         # initialize the environment according to the reference taxonomy
         self._env = REFERENCE_TAXONOMY_ENV
         self._axioms = []
         self._literals = []
+        
 
     @classmethod
-    def from_smt2(cls, ontology_str, mapping):
+    def from_smt2(cls, ontology_str, mapping=None, name=None):
         """
         Loads the ontology from a SMT-LIB representation.
 
@@ -38,48 +39,80 @@ class Z3Ontology(Ontology):
         Returns:
             self: The current instance of the ontology.
         """
-        ontology = cls()
-      
+        ontology = cls(name=name)
+        ontology.load_from_smt2(ontology_str, mapping=mapping, name=name)
+        return ontology
+
+
+    def load_from_smt2(self, ontology_str, mapping=None, name=None):
+
+        """
+        Loads axioms, declarations, and literals from an SMT-LIB representation into the existing ontology.
+        """
         # Check if the input is a file path or a string
         if ontology_str.endswith('.smt2'):
             with open(ontology_str, 'r') as f:
                 ontology_str = f.read()
                 
-        if mapping.endswith('.smt2'):
+        if mapping and mapping.endswith('.smt2'):
             with open(mapping, 'r') as f:
                 mapping = f.read()
                 
         # Parse the SMT-LIB string to extract all named assertions
-        ont_axioms, ont_ground, ont_str_other = cls._load_assertions_from_smtlib(ontology_str)
-        map_axioms, map_ground, map_str_other = cls._load_assertions_from_smtlib(mapping)
+        ont_axioms, ont_ground, ont_str_other = self._load_assertions_from_smtlib(ontology_str)
+        if mapping:
+          map_axioms, map_ground, map_str_other = self._load_assertions_from_smtlib(mapping)
+        else:
+          map_axioms, map_ground, map_str_other = [], [], ""
         
         # Parse the remaining SMT-LIB string to extract additional non-assertion statements (declarations, signature, etc.)
         remaining_str = ont_str_other + map_str_other
         
         # update the extracted environment to the ontology
-        env = parse_smt2_declarations(remaining_str, env = ontology._env)
-        ontology._env = env
-        
-        # Add the parsed assertions to the ontology
-        ontology._add_axioms(ont_axioms, prefix="ont")
-        ontology._add_literals(ont_ground, prefix="ont")
-
-        # Add the mapping assertions to the ontology
-        ontology._add_axioms(map_axioms, prefix="map")
-        ontology._add_literals(map_ground, prefix="map")
-
-        return ontology
-      
-    def load_additional_smt2(self, smt2_str):
-        """
-        Loads additional SMT-LIB2 declarations into the ontology.
-
-        Args:
-            smt2_str (str): The SMT-LIB2 string to parse.
-        """
-        env = parse_smt2_declarations(smt2_str, env=self._env)
+        env = parse_smt2_declarations(remaining_str, env = self._env)
         self._env = env
         
+        # Add the parsed assertions to the ontology
+        self._add_axioms(ont_axioms, prefix=f"{name}_ont")
+        self._add_literals(ont_ground, prefix=f"{name}_ont")
+
+        # Add the mapping assertions to the ontology
+        self._add_axioms(map_axioms, prefix=f"{name}_map")
+        self._add_literals(map_ground, prefix=f"{name}_map")
+
+    @staticmethod
+    def load_new_smt2_ontology(imported_ontology, new_ontology_str, mapping=None, name=None):
+      """
+      Loads additional smt2 ontology and mapping 'on top of' the existing Z3Ontology, effectively importing the existing ontology as a dependency for the new one.
+
+      Args:
+          ontology_str (str): The SMT-LIB text representation of the new ontology, or a path to the SMT-LIB file.
+          
+          mapping (str): The SMT-LIB text representation of the new mapping (from the language of the reference taxonomy into the language of the ontology),
+
+          name (str): The name of the new ontology.
+
+      Returns:
+          Z3Ontology: A new instance of Z3Ontology with the loaded ontology and mapping ('on top of' the existing Z3Ontology).
+      """
+      # get axioms, literals, and env from the imported ontology
+      imported_axioms = imported_ontology.axioms
+      imported_literals = imported_ontology.literals
+      imported_env = imported_ontology._env
+      
+      # create a new ontology and load the new ontology and mapping into it
+      new_ontology = Z3Ontology(name=name)
+      for axiom in imported_axioms:
+          new_ontology.add_axiom(axiom)
+      for literal in imported_literals:
+          new_ontology.add_literal(literal)
+      new_ontology._env = imported_env
+      
+      # load the new ontology and mappings
+      new_ontology.load_from_smt2(new_ontology_str, mapping=mapping, name=new_ontology.name)
+      
+      return new_ontology
+
     @staticmethod
     def _load_assertions_from_smtlib(smtlib_str):
         named_assertions, remaining_str = Z3Ontology.extract_named_assertions(smtlib_str)
@@ -258,185 +291,5 @@ class Z3Ontology(Ontology):
         """
         return self._env
 
-REFERENCE_TAXONOMY_SIG_SMT2 = '''
-(declare-sort Ind 0)
-
-(declare-fun Event (Ind) Bool)
-(declare-fun Transition (Ind) Bool)
-(declare-fun Activity (Ind) Bool)
-(declare-fun Case (Ind) Bool)
-(declare-fun Resource (Ind) Bool)
-(declare-fun hasResource (Ind Ind) Bool)
-(declare-fun hasRecordedTime (Ind Real) Bool)
-(declare-fun hasLifecycleTransition (Ind Ind) Bool)
-(declare-fun hasCase (Ind Ind) Bool)
-(declare-fun hasActivity (Ind Ind) Bool)
-
-
-; Declare individual constants for start and complete transitions
-(declare-const Ind T_start)
-(declare-const Ind T_complete)
-'''
-
-PSL_CORE_SIG_SMT2 = '''
-(declare-fun activity (Ind) Bool)
-(declare-fun activity_occurrence (Ind) Bool)
-(declare-fun object_ (Ind) Bool)
-(declare-fun timepoint (Real) Bool)
-
-(declare-fun occurrence_of (Ind Ind) Bool)
-(declare-fun participates_in (Ind Ind Real) Bool)
-(declare-fun exists_at (Ind Real) Bool)
-(declare-fun is_occurring_at (Ind Real) Bool)
-
-(declare-fun begin_of (Ind) Real)
-(declare-fun end_of (Ind) Real)
-'''
-
-PSL_CORE_SMT2 = '''
-(assert (! 
-  (forall ((x Ind)) 
-    (and
-      (=> (activity x) (not (or (activity_occurrence x) (object_ x))))
-      (=> (activity_occurrence x) (not (or (object_ x) (activity x))))
-      (=> (object_ x) (not (or (activity_occurrence x) (activity x))))
-    )
-  )
-  :named type_disjointness
-  :description "Activities, occurrences, and objects are different things."
-))
-
-(assert (! 
-  (forall ((x Ind) (t1 Real) (t2 Real)) 
-    (=> (and (= (begin_of x) t1) (= (begin_of x) t2)) (= t1 t2))
-  )
-  :named begin_unique
-  :description "Start points are unique."
-))
-
-(assert (! 
-  (forall ((x Ind) (t1 Real) (t2 Real)) 
-    (=> (and (= (end_of x) t1) (= (end_of x) t2)) (= t1 t2))
-  )
-  :named ends_unique
-  :description "End points are unique."
-))
-
-(assert (! 
-  (forall ((o Ind)) 
-    (=> (activity_occurrence o)
-      (exists ((t1 Real) (t2 Real)) 
-        (and 
-          (= (begin_of o) t1)
-          (= (end_of o) t2)
-          (<= t1 t2)
-        )
-      )
-    )
-  )
-  :named occurrence_bounds
-  :description "Activity occurrence start points are before or equal to their end points."
-))
-
-(assert (! 
-  (forall ((a Ind) (o Ind)) 
-    (=> (occurrence_of o a) (and (activity_occurrence o) (activity a)))
-  )
-  :named occurrence_sort_constraints
-  :description "Occurrences are the occurrences of activities."
-))
-
-(assert (! 
-  (forall ((o Ind) (a1 Ind) (a2 Ind)) 
-    (=> (and (occurrence_of o a1) (occurrence_of o a2)) (= a1 a2))
-  )
-  :named unique_activity_occurrence
-  :description "Activity occurrences are an occurrence of a single unique activity."
-))
-
-(assert (! 
-  (forall ((occ Ind)) 
-    (=> (activity_occurrence occ) 
-      (exists ((a Ind)) 
-        (and (activity a) (occurrence_of occ a))
-      )
-    )
-  )
-  :named occurrence_has_activity
-  :description "Every activity occurrence is the occurrence of some activity."
-))
-
-(assert (! 
-  (forall ((x Ind) (occ Ind) (t Real)) 
-    (=> (participates_in x occ t) 
-      (and (object x) (activity_occurrence occ) (timepoint t))
-    )
-  )
-  :named participation_sort_constraints
-  :description "The participates_in relation only holds between objects, activity occurrences, and timepoints, respectively."
-))
-
-(assert (! 
-  (forall ((x Ind) (occ Ind) (t Real)) 
-    (=> (participates_in x occ t) 
-      (and (exists_at x t) (is_occurring_at occ t))
-    )
-  )
-  :named participation_temporal_constraint
-  :description "An object can participate in an activity occurrence only at those timepoints at which both the object exists and the activity is occurring."
-))
-
-(assert (! 
-  (forall ((x Ind) (t Real)) 
-    (= (exists_at x t) 
-      (and (object x) (<= (begin_of x) t) (<= t (end_of x)))
-    )
-  )
-  :named object_temporal_existence
-  :description "An object exists at a timepoint t if and only if t is between or equal to its begin and end points."
-))
-
-(assert (! 
-  (forall ((occ Ind) (t Real)) 
-    (= (is_occurring_at occ t) 
-      (and (activity_occurrence occ) (<= (begin_of occ) t) (<= t (end_of occ)))
-    )
-  )
-  :named occurrence_temporal_extent
-  :description "An activity is occurring at a timepoint t if and only if t is between or equal to the begin and end points of the activity occurrence."
-))
-'''
-
-PSL_CORE_MAPPING_SMT2 = '''
-assert (! 
-  (forall ((e1 Ind) (e2 Ind) (t1 Real) (t2 Real) (c Ind) (a Ind))
-    (=> (and
-      (hasCase e1 c)
-      (hasCase e2 c)
-      (hasActivity e1 a)
-      (hasActivity e2 a)
-      (hasLifecycleTransition e1 T_start)
-      (hasLifecycleTransition e2 T_complete)
-      (hasRecordedTime e1 t1)
-      (hasRecordedTime e2 t2)
-    )
-    (exists ((o Ind))
-      (and
-        (occurrence_of o a)
-        (= (begin_of o) t1)
-        (= (end_of o) t2)
-      )
-    )
-  )
-  :named occurrence_start_end_event_mapping
-  :description "Maps start and complete events to activity occurrences."
-
-  assert (! (transition T_start)
-  :named transition_start
-  :description "declaration of the start transition"
-
-  assert (! (transition T_complete))
-  :named transition_complete
-  :description "declaration of the complete transition"
-)
-'''
+PSL_CORE_Z3 = Z3Ontology.from_smt2('../../opal/logic/z3/ontologies/PSL/PSL_core.smt2', mapping='../../opal/logic/z3/ontologies/PSL/PSL_core_mapping.smt2', name="PSL Core Ontology")
+PSL_OCCTREE_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_occtree.smt2', name="PSL Occtree Ontology")

@@ -6,7 +6,7 @@ class Ontology:
     It provides a common interface and basic functionality for handling ontologies.
     """
 
-    def __init__(self):
+    def __init__(self, name=None):
         """
         Initializes a new instance of the Ontology class.
         This constructor is intended to be called by subclasses to set up the ontology.
@@ -15,6 +15,8 @@ class Ontology:
         self._axioms = []
         self._individuals = {}
         self._signature = {}
+        self._imports = []
+        self.name = name or f"Ontology_{id(self)}"
     
     def from_txt(self, text):
         """
@@ -36,6 +38,18 @@ class Ontology:
             axiom: The axiom to be added to the ontology.
         """
         raise NotImplementedError("This method should be implemented by subclasses.")
+    
+    def import_ontology(self, other_ontology):
+        """
+        Imports another ontology into this ontology.
+        
+        Args:
+            ontology (Ontology): The ontology to be imported.
+        """
+        if other_ontology not in self._imports:
+            self._imports.append(other_ontology)
+        # Leave additional merging logic to subclasses if needed.
+
     
     
     #  PROPERTIES  #####################################################################################################
