@@ -79,3 +79,9 @@ class Z3Literal(Literal):
     
     def __str__(self) -> str:
         return str(self.z3_expr)
+    
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Z3Literal):
+           return self.z3_expr.eq(other.z3_expr)
+       
+        return False

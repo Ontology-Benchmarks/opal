@@ -49,10 +49,10 @@
                (not (= a3 a1))
                (forall ((a4 Ind))
                  (=> (and (subactivity a1 a4) (subactivity a4 a3))
-                     (or (= a4 a1) (= a4 a3)))))))))
+                     (or (= a4 a1) (= a4 a3))))))))
   :named subactivity_discrete_up
   :description "The subactivity relation is a discrete ordering, so every activity has an upwards successor."
-)
+))
 
 ; The subactivity relation is a discrete ordering (downwards successor).
 (assert (!
@@ -64,10 +64,10 @@
                (not (= a3 a2))
                (forall ((a4 Ind))
                  (=> (and (subactivity a3 a4) (subactivity a4 a2))
-                     (or (= a4 a2) (= a4 a3)))))))))
+                     (or (= a4 a2) (= a4 a3))))))))
   :named subactivity_discrete_down
   :description "The subactivity relation is a discrete ordering, so every activity has a downwards successor."
-)
+))
 
 ; An activity is primitive iff it has no proper subactivities.
 (assert (!

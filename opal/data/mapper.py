@@ -9,6 +9,9 @@ import yatter
 from ruamel.yaml import YAML
 import kglab
 import rdflib
+from rdflib import BNode, URIRef
+from rdflib.namespace import RDF, OWL
+from rdflib.collection import Collection
 
 import re
 from string import Template
@@ -90,12 +93,15 @@ def generate_yarrml_mapping(include_resources: bool, include_transitions: bool):
 class LogMapper:
     def __init__(self, 
                  data: EventData, 
-                 output_encoding : str, 
+                 output_encoding : str,
+                 domain_closures = [], 
                  prefixes : dict = {'ex':'http://www.example.com/', 'on': 'https://stl.mie.utoronto.ca/ontologies/spm/'}):
         self.data = data
         self.output_encoding = output_encoding
         self.prefixes = prefixes
+        self.domain_closures = domain_closures
         self.mappings = self.build_mappings()
+        
         
         
     def build_mapping(self, log_path: str):
@@ -160,28 +166,32 @@ class LogMapper:
         return kgs
     
     
-    def generate_knowledge_graph(self, mapping_path):
+    def generate_knowledge_graph(self, mapping_path: str):
         """
-        Generates a knowledge graph from the log and mapping
+        Generates a knowledge graph and optionally adds domain closure axioms.
+
+        Args:
+            mapping_path (str): The path to the RML mapping file.
+            domain_closures (list, optional): A list of local class names 
+                                            (e.g., ["Activity", "Event"]) 
+                                            to add domain closure axioms for. The 'on' prefix is
+                                            automatically applied.
         """
-        # init knowledge graph
+        # ... (The first part of the function for materialization remains the same)
         print("Generating knowledge graph...")
         kg = kglab.KnowledgeGraph(name=mapping_path.replace('.rml', ''), namespaces=self.prefixes)
         process_name = self.data.metadata['process_name']
-        # generate config
         config_string = f"""
         [{process_name}]
         mappings={mapping_path}
         """
-        # write config to temporary file
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.ini') as f:
             f.write(config_string)
             kg_config_path = f.name
-        # generate the knowledge graph from the config
         kg.materialize(kg_config_path)
         
         print("Knowledge graph generated.")
-        
+
         return kg
     
     def save_ground_data(self, output_path: str):
@@ -201,11 +211,16 @@ class LogMapper:
         return None
     
     def get_mapped_data(self):
+        '''
+        Handles generating mapped data according to the output encoding
+        '''
         
         encoding = self.output_encoding
         
         if encoding == 'RDF':
-            ground_data = self.kg
+            if not hasattr(self, 'kgs'):
+                self.generate_knowledge_graphs()
+            ground_data = self.kgs
             
         elif encoding == 'FOL':
             ground_data = self.generate_fol()

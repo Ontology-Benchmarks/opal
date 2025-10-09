@@ -1,15 +1,16 @@
 ; SIGNATURE
 (declare-fun legal (Ind) Bool)
 (declare-fun successor (Ind Ind) Ind)
+(declare-fun hand_off (Ind Ind Ind Ind Ind) Bool)
+(declare-fun ping_pong (Ind) Bool)
 
-(declare-fun precedes (Ind Ind) Bool)
-(declare-fun min_precedes (Ind Ind Ind) Bool) ; s1, s2, activity
-(declare-fun root (Ind Ind) Bool) ; occurrence, activity
-(declare-fun subtree (Ind Ind Ind Ind) Bool) ; s1 a1 s2 a2
-(declare-fun next_subocc (Ind Ind Ind) Bool) ; s1 s2 a
-(declare-fun leaf (Ind Ind) Bool) ; occurrence, activity
-(declare-fun do (Ind Ind Ind) Bool) ; activity, start, end
-(declare-fun sibling (Ind Ind Ind) Bool) ; s1 s2 a
+(declare-fun min_precedes (Ind Ind Ind) Bool)
+(declare-fun root (Ind Ind) Bool)
+(declare-fun subtree (Ind Ind Ind Ind) Bool)
+(declare-fun next_subocc (Ind Ind Ind) Bool)
+(declare-fun leaf (Ind Ind) Bool)
+(declare-fun do (Ind Ind Ind) Bool)
+(declare-fun sibling (Ind Ind Ind) Bool)
 
 ; AXIOMS
 ; Occurrences in the activity tree for an activity correspond to atomic subactivity occurrences.

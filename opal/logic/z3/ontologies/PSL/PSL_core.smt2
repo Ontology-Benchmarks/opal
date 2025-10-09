@@ -6,6 +6,7 @@
 
 (declare-fun occurrence_of (Ind Ind) Bool)
 (declare-fun participates_in (Ind Ind Real) Bool)
+(declare-fun participates (Ind Ind) Bool)
 (declare-fun exists_at (Ind Real) Bool)
 (declare-fun is_occurring_at (Ind Real) Bool)
 
@@ -91,8 +92,27 @@
       (and (object_ x) (activity_occurrence occ) (timepoint t))
     )
   )
-  :named participation_sort_constraints
+  :named participation_t_sort_constraints
   :description "The participates_in relation only holds between objects, activity occurrences, and timepoints, respectively."
+))
+
+(assert (! 
+  (forall ((x Ind) (occ Ind)) 
+    (=> (exists ((t Real)) (participates_in x occ t))
+        (participates x occ))
+  )
+  :named participation_time_to_generic
+  :description "If an object participates in an occurrence at any timepoint, it is a participant in the occurrence"
+))
+
+(assert (! 
+  (forall ((x Ind) (occ Ind)) 
+    (=> (participates x occ) 
+      (and (object_ x) (activity_occurrence occ))
+    )
+  )
+  :named participation_sort_constraints
+  :description "The participates relation only holds between objects, and activity occurrences."
 ))
 
 (assert (! 

@@ -251,7 +251,12 @@ class Z3Ontology(Ontology):
         Args:
             axiom (dictionary): The axiom to add
         """
-        self._axioms.append(axiom)
+        # make sure axiom is not duplicated
+        axiom_expr = axiom['expr']
+        current_axiom_exprs = [a['expr'] for a in self._axioms]
+        if axiom_expr not in current_axiom_exprs:
+          self._axioms.append(axiom)
+          
 
     def add_literal(self, literal):
         """
@@ -259,7 +264,9 @@ class Z3Ontology(Ontology):
         Args:
             literal (dictionary): The literal to add
         """
-        self._literals.append(literal)
+        # make sure literal is not duplicated
+        if literal not in self._literals:
+          self._literals.append(literal)
     
     @property
     def axioms(self):
@@ -293,3 +300,7 @@ class Z3Ontology(Ontology):
 
 PSL_CORE_Z3 = Z3Ontology.from_smt2('../../opal/logic/z3/ontologies/PSL/PSL_core.smt2', mapping='../../opal/logic/z3/ontologies/PSL/PSL_core_mapping.smt2', name="PSL Core Ontology")
 PSL_OCCTREE_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_occtree.smt2', name="PSL Occtree Ontology")
+PSL_SUBACTIVITY_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_subactivity.smt2', name="PSL Subactivity Ontology")
+PSL_subactivity_occtree = Z3Ontology.load_new_smt2_ontology(PSL_OCCTREE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_subactivity.smt2', name="PSL Subactivity Ontology with Occtree")
+PSL_ATOMIC_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_subactivity_occtree, '../../opal/logic/z3/ontologies/PSL/PSL_atomic.smt2', name="PSL Atomic Ontology")
+PSL_COMPLEX_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_ATOMIC_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_complex.smt2', name="PSL Complex Ontology")
