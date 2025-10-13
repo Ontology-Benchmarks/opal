@@ -298,7 +298,8 @@ class Z3Ontology(Ontology):
         """
         return self._env
 
-PSL_CORE_Z3 = Z3Ontology.from_smt2('../../opal/logic/z3/ontologies/PSL/PSL_core.smt2', mapping='../../opal/logic/z3/ontologies/PSL/PSL_core_mapping.smt2', name="PSL Core Ontology")
+REF_ONTOLOGY_Z3 = Z3Ontology.from_smt2('../../opal/logic/z3/ontologies/ref/reference_taxonomy.smt2', name="Reference Taxonomy")
+PSL_CORE_Z3 = Z3Ontology.load_new_smt2_ontology(REF_ONTOLOGY_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_core.smt2', mapping='../../opal/logic/z3/ontologies/PSL/PSL_core_mapping.smt2', name="PSL Core Ontology")
 PSL_OCCTREE_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_occtree.smt2', name="PSL Occtree Ontology")
 PSL_SUBACTIVITY_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_subactivity.smt2', name="PSL Subactivity Ontology")
 PSL_subactivity_occtree = Z3Ontology.load_new_smt2_ontology(PSL_OCCTREE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_subactivity.smt2', name="PSL Subactivity Ontology with Occtree")

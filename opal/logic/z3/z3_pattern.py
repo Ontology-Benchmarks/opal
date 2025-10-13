@@ -92,12 +92,12 @@ OCCURS_IN_CASE_PATTERN = Z3Pattern(
         "case_id": "Case identifier to check within"
     },
     pattern_str="""
-(assert (!(exists ((e Ind))
+(assert ((exists ((e Ind))
     (and
         (hasActivity e {activity})
         (hasCase e {case_id})
     )
-)))""",
+))""",
     pattern_name="Occurs in Case"
 )
 

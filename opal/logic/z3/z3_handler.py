@@ -15,17 +15,25 @@ def parse_smt2_declarations(smt2_str : str, env=None):
     Returns:
         dict: The environment dictionary containing the parsed declarations as Z3 context, sorts, functions, and constants.
     '''
+    new_env = {}
     if env is None:
-        env = {}
-        env['ctx'] = Context()
-        env['sorts'] = {}
-        env['functions'] = {}
-        env['constants'] = {}
+        new_env['ctx'] = Context()
+        new_env['sorts'] = {}
+        new_env['functions'] = {}
+        new_env['constants'] = {}
+    else:
+        # Create a new environment that inherits from the parent
+        # Reuse the same context, but create copies of the declaration dicts
+        # to prevent modifying the parent env.
+        new_env['ctx'] = env['ctx']
+        new_env['sorts'] = env['sorts'].copy()
+        new_env['functions'] = env['functions'].copy()
+        new_env['constants'] = env['constants'].copy()
 
-    sorts = env['sorts']
-    functions = env['functions']
-    constants = env['constants']
-    ctx = env['ctx']
+    sorts = new_env['sorts']
+    functions = new_env['functions']
+    constants = new_env['constants']
+    ctx = new_env['ctx']
 
     # Match declare-sort
     for match in re.finditer(r'\(declare-sort\s+(\w+)\s+0\)', smt2_str):

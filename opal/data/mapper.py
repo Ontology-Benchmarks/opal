@@ -177,7 +177,7 @@ class LogMapper:
                                             to add domain closure axioms for. The 'on' prefix is
                                             automatically applied.
         """
-        # ... (The first part of the function for materialization remains the same)
+ 
         print("Generating knowledge graph...")
         kg = kglab.KnowledgeGraph(name=mapping_path.replace('.rml', ''), namespaces=self.prefixes)
         process_name = self.data.metadata['process_name']
@@ -318,7 +318,22 @@ class LogMapper:
         """
         
         # set the z3 environment
-        self._z3_env = environment
+        new_env = {}
+        if environment is None:
+            new_env['ctx'] = Context()
+            new_env['sorts'] = {}
+            new_env['functions'] = {}
+            new_env['constants'] = {}
+        else:
+            # Create a new environment that inherits from the parent
+            # Reuse the same context, but create copies of the declaration dicts
+            # to prevent modifying the parent env.
+            new_env['ctx'] = environment['ctx']
+            new_env['sorts'] = environment['sorts'].copy()
+            new_env['functions'] = environment['functions'].copy()
+            new_env['constants'] = environment['constants'].copy()
+
+        self._z3_env = new_env
         
         # define helper function to strip URIs
         strip_uri = lambda x: re.sub(r".*/", '', x)
@@ -370,7 +385,7 @@ class LogMapper:
         # iterate over all knowledge graphs and convert them to Z3 literals
         for i,kg in enumerate(self.kgs):
             z3_facts_result = np.concatenate((z3_facts_result, kg_to_z3_literals(kg)), axis=0)
-            print(f"Z3 literal set generated ({i+1}/{len(self.kgs)})")
+            print(f"Z3 literal set ({i+1}/{len(self.kgs)}) generated.")
             
         return z3_facts_result
 
