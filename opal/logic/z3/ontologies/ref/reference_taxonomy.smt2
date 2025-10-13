@@ -11,7 +11,7 @@
 (declare-fun hasCase (Ind Ind) Bool)
 (declare-fun hasActivity (Ind Ind) Bool)
 (declare-fun next_event (Ind Ind) Bool)
-(declare-fun earlier (Ind Ind) Bool)
+(declare-fun earlier (Ind Ind Ind) Bool)
 
 
 ; Declare individual constants for start and complete transitions
@@ -44,34 +44,27 @@
 ))
 
 (assert (!
-    (forall ((e1 Ind) (e2 Ind))
-        (=>
-            (exists ((c Ind) (t1 Real) (t2 Real))
+    (forall ((e1 Ind) (e2 Ind) (c Ind))
+        (=
                 (and
+                    (Event e1)
+                    (Event e2)
+                    (Case c)
                     (hasCase e1 c)
                     (hasCase e2 c)
-                    (= (hasRecordedTime e1) t1)
-                    (= (hasRecordedTime e2) t2)
-                    (< t1 t2)
+                    (< (hasRecordedTime e1) (hasRecordedTime e2))
                 )
-            )
-            (earlier e1 e2)
+            (event_earlier e1 e2 c))
         )
-    )
     :named event_order_SIMPLE
 ))
 
 (assert (!
-    (forall ((e1 Ind) (e2 Ind))
-        (=>
-            (exists ((c Ind) (t1 Real) (t2 Real))
-                (and
-                    (hasCase e1 c)
-                    (hasCase e2 c)
-                    (= (hasRecordedTime e1) t1)
-                    (= (hasRecordedTime e2) t2)
-                    (< t1 t2)
-                    (not (exists ((e3 Ind) (t3 Real))
+    (forall ((e1 Ind) (e2 Ind) (c Ind))
+        (=
+            (and
+                (earlier e1 e2 c)
+                (not (exists ((e3 Ind) (t3 Real))
                         (and
                             (Event e3)
                             (not (= e3 e1))
@@ -83,8 +76,8 @@
                         )
                     ))
                 )
-            )
-            (next_event e1 e2)
+            
+            (next_event e1 e2 c)
         )
     )
     :named infer_next_event

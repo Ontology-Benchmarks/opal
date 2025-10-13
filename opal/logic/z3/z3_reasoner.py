@@ -16,7 +16,8 @@ class Z3Reasoner(Reasoner):
         super().__init__()
         self.ctx = None
         self.sorts = {}
-        self.decls = {}
+        self.functions = {} # For function declarations
+        self.constants = {} # For constant expressions
         self.assertions = []
         self.facts = []
         
@@ -28,8 +29,8 @@ class Z3Reasoner(Reasoner):
             self.ctx = source_ctx
             if source_env:
                 self.sorts.update(source_env.get('sorts', {}))
-                self.decls.update(source_env.get('functions', {}))
-                self.decls.update(source_env.get('constants', {}))
+                self.functions.update(source_env.get('functions', {}))
+                self.constants.update(source_env.get('constants', {}))
 
     def load_ontology(self, ontology : Z3Ontology):
         """
@@ -89,10 +90,10 @@ class Z3Reasoner(Reasoner):
 
         for name, const_obj in constants_from_data.items():
             sort = const_obj.sort()
-            if name not in self.decls:
+            if name not in self.constants:
                 # Create the constant in the new context and add its declaration.
                 new_const = Const(name, sort)
-                self.decls[name] = new_const.decl()
+                self.constants[name] = new_const
 
     def query(self, query):
         
@@ -178,10 +179,8 @@ class Z3Reasoner(Reasoner):
         # assuming your facts are custom objects.
         for name, expr in self.facts:
             # Check if the fact is for the correct relation
-            if hasattr(expr, 'predicate') and expr.predicate == relation_name and expr.positive:
-                # Check if the number of terms matches the relation's arity
-                if len(expr.terms) == arity:
-                    relevant_tuples.add(tuple(expr.terms))
+            if expr.decl() == func:
+                relevant_tuples.add(tuple(str(c) for c in expr.children()))
 
         return list(relevant_tuples)
 
@@ -215,13 +214,15 @@ class Z3Reasoner(Reasoner):
         dc_axiom_str = f"(assert (forall ({quant_vars_str}) (= {relation_call} {disj_str})))"
         
         print(f"Adding domain closure axiom for relation {relation_name}")
-        self.assertions.append((axiom_name, dc_axiom_str))
-                
+        parsed_expr = parse_smt2_string(dc_axiom_str, ctx=self.ctx, sorts=self.sorts, decls=self.decls)[0]
+        self.assertions.append((axiom_name, parsed_expr))
+
     def add_unique_name_axioms(self, class_name):
         """
         Add unique name axioms to the reasoner for all constants belonging to the given class.
         """
-        relevant_inds = self._get_class_instances(class_name)
+        relevant_inds = self._get_relation_instances(class_name)
+        relevant_inds = [ind[0] for ind in relevant_inds if len(ind) == 1]  # Get only unary instances
         if not relevant_inds:
             print(f"No individuals found for class {class_name}. Skipping unique name axioms.")
             return None
@@ -232,4 +233,14 @@ class Z3Reasoner(Reasoner):
         
         axiom_name = f"UniqueNames_{class_name}"
         distinct_str = f"(assert (distinct {' '.join(relevant_inds)}))"
-        self.assertions.append((axiom_name, distinct_str))
+        parsed_expr = parse_smt2_string(distinct_str, ctx=self.ctx, sorts=self.sorts, decls=self.decls)[0]
+        self.assertions.append((axiom_name, parsed_expr))
+        
+        
+    @property
+    def decls(self):
+        # A helper property to provide a unified dictionary for the SMT parser
+        # It correctly gets declarations for both functions and constants
+        fn_decls = self.functions
+        const_decls = {name: const.decl() for name, const in self.constants.items()}
+        return {**fn_decls, **const_decls}
