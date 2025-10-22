@@ -64,23 +64,9 @@
                (not (exists ((a4 Ind))
                       (and (atomic a4)
                            (subactivity a4 a1)
-                           (subactivity a4 a3)))))))))
+                           (subactivity a4 a3))))))))
   :named atomic_proper_subactivity
   :description "An atomic action has a proper subactivity iff another atomic can be concurrently aggregated."
-)
-
-; The semilattice of atomic activities is distributive.
-(assert (!
-  (forall ((a Ind) (b0 Ind) (b1 Ind))
-    (=> (and (atomic a) (atomic b0) (atomic b1)
-             (subactivity a (conc b0 b1))
-             (not (primitive a)))
-        (exists ((a0 Ind) (a1 Ind))
-          (and (subactivity a0 b0)
-               (subactivity a1 b1)
-               (= a (conc a0 a1))))))
-  :named atomic_semilattice_distributive
-  :description "The semilattice of atomic activities is distributive."
 ))
 
 ; Only atomic activities can be generator activities.

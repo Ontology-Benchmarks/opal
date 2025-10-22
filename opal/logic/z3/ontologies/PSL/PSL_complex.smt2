@@ -11,6 +11,8 @@
 (declare-fun leaf (Ind Ind) Bool)
 (declare-fun do (Ind Ind Ind) Bool)
 (declare-fun sibling (Ind Ind Ind) Bool)
+(declare-fun atocc (Ind Ind) Bool)
+
 
 ; AXIOMS
 ; Occurrences in the activity tree for an activity correspond to atomic subactivity occurrences.
@@ -115,7 +117,7 @@
 ; Only complex activities can be arguments to min_precedes.
 (assert (!
   (forall ((s1 Ind) (s2 Ind) (a Ind))
-    (=> (min_precedes s1 s2 a) (not (atomic a))))
+    (=> (min_precedes s1 s2 a) (not (primitive a))))
   :named min_precedes_complex_only
   :description "Only complex activities can be arguments to min_precedes."
 ))
@@ -194,5 +196,3 @@
   :named sibling_def
   :description "Two subactivity occurrences are siblings if they have a common predecessor in the activity tree or share a predecessor in the occurrence tree."
 ))
-
-

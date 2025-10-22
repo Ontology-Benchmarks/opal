@@ -82,9 +82,7 @@ class Z3Pattern:
         args_str = "\n".join([f"  {name}: {desc}" for name, desc in self.args.items()])
         return f"Z3Pattern(\n{args_str}\n)\nTemplate:\n{self.pattern_str}"
 
-# Pattern definitions for common process mining patterns
-
-# Pattern definitions based on the formal definitions in the paper
+# Pattern Definitions
 
 OCCURS_IN_CASE_PATTERN = Z3Pattern(
     args={
@@ -105,7 +103,7 @@ HAND_OFF_PATTERN = Z3Pattern(
     args={},
     pattern_str="""
 (assert (! (forall ((r1 Ind) (r2 Ind) (o1 Ind) (o2 Ind) (c Ind))
-    (=> (and
+    (= (and
             (next_subocc o1 o2 c)
             (participates r1 o1)
             (participates r2 o2)
@@ -120,7 +118,7 @@ PING_PONG_PATTERN = Z3Pattern(
     args={},
     pattern_str="""
 (assert (! (forall ((c Ind))
-    (=> (exists ((e1 Ind) (e2 Ind) (e3 Ind) (e4 Ind) (r1 Ind) (r2 Ind) (r3 Ind) (r4 Ind))
+    (= (exists ((e1 Ind) (e2 Ind) (e3 Ind) (e4 Ind) (r1 Ind) (r2 Ind) (r3 Ind) (r4 Ind))
             (and
                 (hand_off r1 r2 e1 e2 c)
                 (hand_off r3 r4 e3 e4 c)

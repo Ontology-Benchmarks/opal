@@ -303,5 +303,5 @@ PSL_CORE_Z3 = Z3Ontology.load_new_smt2_ontology(REF_ONTOLOGY_Z3, '../../opal/log
 PSL_OCCTREE_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_occtree.smt2', name="PSL Occtree Ontology")
 PSL_SUBACTIVITY_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_subactivity.smt2', name="PSL Subactivity Ontology")
 PSL_subactivity_occtree = Z3Ontology.load_new_smt2_ontology(PSL_OCCTREE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_subactivity.smt2', name="PSL Subactivity Ontology with Occtree")
-PSL_ATOMIC_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_subactivity_occtree, '../../opal/logic/z3/ontologies/PSL/PSL_atomic.smt2', name="PSL Atomic Ontology")
-PSL_COMPLEX_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_ATOMIC_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_complex.smt2', name="PSL Complex Ontology")
+#PSL_ATOMIC_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_subactivity_occtree, '../../opal/logic/z3/ontologies/PSL/PSL_atomic.smt2', name="PSL Atomic Ontology")
+PSL_COMPLEX_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_subactivity_occtree, '../../opal/logic/z3/ontologies/PSL/PSL_complex.smt2', name="PSL Complex Ontology")

@@ -10,8 +10,8 @@
 (declare-fun hasLifecycleTransition (Ind Ind) Bool)
 (declare-fun hasCase (Ind Ind) Bool)
 (declare-fun hasActivity (Ind Ind) Bool)
-(declare-fun next_event (Ind Ind) Bool)
-(declare-fun earlier (Ind Ind Ind) Bool)
+(declare-fun next_event (Ind Ind Ind) Bool)
+(declare-fun event_earlier (Ind Ind Ind) Bool)
 
 
 ; Declare individual constants for start and complete transitions
@@ -63,16 +63,15 @@
     (forall ((e1 Ind) (e2 Ind) (c Ind))
         (=
             (and
-                (earlier e1 e2 c)
+                (event_earlier e1 e2 c)
                 (not (exists ((e3 Ind) (t3 Real))
                         (and
                             (Event e3)
                             (not (= e3 e1))
                             (not (= e3 e2))
                             (hasCase e3 c)
-                            (= (hasRecordedTime e3) t3)
-                            (< t1 t3)
-                            (< t3 t2)
+                            (< (hasRecordedTime e3) (hasRecordedTime e2))
+                            (> (hasRecordedTime e3) (hasRecordedTime e1))
                         )
                     ))
                 )

@@ -59,7 +59,7 @@ class Z3Reasoner(Reasoner):
         
         for assertion in assertions:
             name, expr = assertion['name'], assertion['expr']
-            #print(f"Loading assertion: {name} : {expr}")
+            print(f"Loading assertion: {name} : {expr}")
             parsed_expr = parse_smt2_string(expr, ctx=self.ctx, sorts=self.sorts, decls=self.decls)[0]
             self.assertions.append((name, parsed_expr))
 
@@ -235,8 +235,7 @@ class Z3Reasoner(Reasoner):
         distinct_str = f"(assert (distinct {' '.join(relevant_inds)}))"
         parsed_expr = parse_smt2_string(distinct_str, ctx=self.ctx, sorts=self.sorts, decls=self.decls)[0]
         self.assertions.append((axiom_name, parsed_expr))
-        
-        
+    
     @property
     def decls(self):
         # A helper property to provide a unified dictionary for the SMT parser
