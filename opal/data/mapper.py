@@ -46,7 +46,7 @@ def generate_yarrml_mapping(include_resources: bool, include_transitions: bool):
                 po:
                 - [a, on:Transition]"""
         
-        event_transition_line = "- [on:hasTransition, ex:$$($transition)]"
+        event_transition_line = "- [on:hasLifecycleTransition, ex:$$($transition)]"
         
 
     template_str = f"""
