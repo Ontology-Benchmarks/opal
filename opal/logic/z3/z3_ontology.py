@@ -71,6 +71,7 @@ class Z3Ontology(Ontology):
         # update the extracted environment to the ontology
         env = parse_smt2_declarations(remaining_str, env = self._env)
         self._env = env
+        print(f"Updated ontology environment with {len(env['sorts'])} sorts and {len(env['functions'])} functions.")
         
         # Add the parsed assertions to the ontology
         self._add_axioms(ont_axioms, prefix=f"{name}_ont")
@@ -305,3 +306,4 @@ PSL_SUBACTIVITY_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/
 PSL_subactivity_occtree = Z3Ontology.load_new_smt2_ontology(PSL_OCCTREE_Z3, '../../opal/logic/z3/ontologies/PSL/PSL_subactivity.smt2', name="PSL Subactivity Ontology with Occtree")
 #PSL_ATOMIC_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_subactivity_occtree, '../../opal/logic/z3/ontologies/PSL/PSL_atomic.smt2', name="PSL Atomic Ontology")
 PSL_COMPLEX_Z3 = Z3Ontology.load_new_smt2_ontology(PSL_subactivity_occtree, '../../opal/logic/z3/ontologies/PSL/PSL_complex.smt2', name="PSL Complex Ontology")
+PSL_OCC_PREC = Z3Ontology.load_new_smt2_ontology(PSL_CORE_Z3, '../../opal/logic/z3/ontologies/PSL_refactored/PSL_occ_prec.smt2', mapping = '../../opal/logic/z3/ontologies/PSL_refactored/PSL_occ_prec_mapping.smt2', name="PSL Occurrence Precedence Ontology")

@@ -1,0 +1,55 @@
+
+formulas(assumptions).
+
+(all x all y all z
+	(apply(x,y,z)
+	->
+	generator(x))).
+
+(all x all y all z all w
+	((apply(x,y,z)
+	& apply(x,y,w))
+	->
+	(w=z))).
+
+(all x all y all z all w
+	((apply(x,y,z)
+	& apply(w,y,z))
+	->
+	(w=x))).
+
+(all x all y all z all w
+	((apply(y,x,z)
+	& apply(y,w,z))
+	->
+	(w=x))).
+
+(all x 
+	(generator(x)
+	->
+	(all y
+		(exists z
+			(apply(x,y,z)))))).
+
+(all x all y
+	(-apply(x,y,y))).
+
+(all x all y all z all w
+	((apply(x,y,z)
+	& generator(z)
+	& generator(w))	
+	->
+	apply(w,y,w))).
+
+(all x all a all b all y all z
+	((apply(a,x,z) 
+	& apply(b,y,z)) 
+	-> (a=b))).
+
+(all x
+	(generator(x)
+	<->
+	-(exists y exists z
+		(apply(y,z,x))))).
+
+end_of_list.

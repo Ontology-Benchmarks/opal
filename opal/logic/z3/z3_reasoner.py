@@ -128,7 +128,9 @@ class Z3Reasoner(Reasoner):
         if self.ctx is None:
             return Solver()
         solver = Solver(ctx=self.ctx)
+        # set model generation options
         solver.set(unsat_core=True)
+        
         for name, expr in self.assertions:
             solver.assert_and_track(expr, name)
         for name, expr in self.facts:

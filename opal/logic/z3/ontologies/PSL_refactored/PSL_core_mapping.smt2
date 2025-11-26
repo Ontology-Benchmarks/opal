@@ -52,9 +52,25 @@
 
 (assert (! 
   (forall ((c Ind) (p Ind))
-    (=> (hasProcess c p)
+    (=> (and (hasProcess c p)
       (occurrence_of c p))
+      )
     )
   :named case_process_occurrence_mapping
   :description "Cases are occurrences of the top level process."
 ))
+
+(assert (! 
+  (forall ((e1 Ind) (e2 Ind))
+    (=> 
+    (ev_occ e1 e2)
+    (and 
+      (Event e1)
+      (Event e2)
+      (activity_occurrence (ev_occ e1 e2))
+    )
+    )
+    )
+  :named occurrence_mapping_sort
+  :description "Eventive occurrence mappings map events to occurrences."
+  ))

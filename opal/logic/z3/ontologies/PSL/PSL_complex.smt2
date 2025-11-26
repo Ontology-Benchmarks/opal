@@ -1,6 +1,5 @@
 ; SIGNATURE
 (declare-fun legal (Ind) Bool)
-(declare-fun successor (Ind Ind) Ind)
 (declare-fun hand_off (Ind Ind Ind Ind Ind) Bool)
 (declare-fun ping_pong (Ind) Bool)
 

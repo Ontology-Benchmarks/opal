@@ -1,0 +1,997 @@
+mapped_a_46_hasResource(E_6, user_0) = True
+PSL Core Ontology_ont_t_6_occurrence_has_activity = True
+mapped_a_27_hasRecordedTime(E_1) == 1451639700 = True
+mapped_a_65_Transition(T_complete) = True
+E_8 = Ind!val!0
+A_activity_A = Ind!val!38
+mapped_a_36_hasResource(E_7, user_0) = True
+mapped_a_21_hasLifecycleTransition(E_0, T_start) = True
+mapped_a_35_hasResource(E_4, user_1) = True
+E_0 = Ind!val!1
+Reference Taxonomy_ont_t_2_infer_next_event = True
+PSL Core Ontology_map_t_2_case_process_occurrence_mapping = True
+mapped_a_5_Case(C_case_0) = True
+mapped_a_19_hasResource(E_0, user_1) = True
+mapped_a_51_hasRecordedTime(E_7) == 1451811600 = True
+Reference Taxonomy_ont_a_1_transition_complete = True
+mapped_a_87_hasResource(E_10, user_2) = True
+mapped_a_38_Event(E_5) = True
+mapped_a_81_Activity(A_activity_D) = True
+mapped_a_91_Case(C_case_2) = True
+Reference Taxonomy_ont_t_1_event_order_SIMPLE = True
+Reference Taxonomy_ont_a_0_transition_start = True
+mapped_a_12_Resource(user_2) = True
+UniqueNames_Event = True
+mapped_a_93_hasActivity(E_10, A_activity_C) = True
+PSL Core Ontology_ont_t_7_participation_t_sort_constraints = True
+mapped_a_54_Activity(A_activity_B) = True
+mapped_a_70_hasCase(E_10, C_case_2) = True
+mapped_a_80_hasCase(E_11, C_case_2) = True
+E_7 = Ind!val!4
+mapped_a_16_hasResource(E_2, user_2) = True
+mapped_a_28_Event(E_0) = True
+E_1 = Ind!val!8
+mapped_a_59_Resource(user_0) = True
+user_0 = Ind!val!19
+PSL Core Ontology_ont_t_10_participation_temporal_constraint = True
+T_complete = Ind!val!16
+mapped_a_78_hasLifecycleTransition(E_10, T_complete) = True
+mapped_a_82_hasActivity(E_11, A_activity_D) = True
+mapped_a_23_hasCase(E_1, C_case_0) = True
+mapped_a_56_hasActivity(E_6, A_activity_B) = True
+PSL Occurrence Precedence Ontology_ont_t_11_ping_pong_def = True
+PSL Core Ontology_ont_t_2_ends_unique = True
+PSL Occurrence Precedence Ontology_ont_t_1_occ_precedes_transitive = True
+mapped_a_8_Transition(T_start) = True
+E_10 = Ind!val!9
+user_1 = Ind!val!18
+PSL Occurrence Precedence Ontology_ont_t_4_occ_precedes_atomic_2 = True
+mapped_a_1_hasRecordedTime(E_0) == 1451638800 = True
+PSL Core Ontology_ont_t_11_object_temporal_existence = True
+mapped_a_43_hasLifecycleTransition(E_6, T_complete) = True
+mapped_a_85_hasLifecycleTransition(E_9, T_complete) = True
+PSL Core Ontology_ont_t_1_begin_unique = True
+mapped_a_57_Event(E_6) = True
+mapped_a_69_Event(E_9) = True
+mapped_a_55_hasRecordedTime(E_5) == 1451724600 = True
+mapped_a_20_Event(E_3) = True
+mapped_a_30_Activity(A_activity_A) = True
+PSL Core Ontology_ont_t_0_type_disjointness = True
+mapped_a_47_hasCase(E_4, C_case_1) = True
+mapped_a_11_hasProcess(C_case_0, P1) = True
+UniqueNames_Case = True
+mapped_a_60_hasCase(E_6, C_case_1) = True
+PSL Occurrence Precedence Ontology_ont_t_7_occ_precedes_covers = True
+PSL Occurrence Precedence Ontology_map_t_1_comp_occ_precedes_mapping = True
+mapped_a_89_Activity(A_activity_A) = True
+E_6 = Ind!val!3
+mapped_a_49_hasCase(E_7, C_case_1) = True
+mapped_a_13_hasActivity(E_2, A_activity_C) = True
+PSL Core Ontology_map_t_1_occurrence_participation_mapping = True
+mapped_a_39_Transition(T_start) = True
+PSL Occurrence Precedence Ontology_ont_t_8_occ_precedes_covered = True
+mapped_a_41_Event(E_7) = True
+mapped_a_48_hasActivity(E_5, A_activity_B) = True
+mapped_a_94_hasResource(E_9, user_1) = True
+E_9 = Ind!val!5
+PSL Core Ontology_ont_t_3_occurrence_bounds = True
+E_2 = Ind!val!6
+mapped_a_64_hasActivity(E_8, A_activity_A) = True
+PSL Core Ontology_ont_t_9_participation_sort_constraints = True
+mapped_a_26_Activity(A_activity_C) = True
+mapped_a_74_hasCase(E_9, C_case_2) = True
+mapped_a_24_hasLifecycleTransition(E_1, T_complete) = True
+mapped_a_63_hasResource(E_5, user_0) = True
+A_activity_D = Ind!val!20
+mapped_a_0_Transition(T_complete) = True
+mapped_a_84_Event(E_8) = True
+mapped_a_86_hasRecordedTime(E_10) == 1451639700 = True
+user_2 = Ind!val!17
+mapped_a_90_Event(E_10) = True
+mapped_a_76_Event(E_11) = True
+PSL Occurrence Precedence Ontology_ont_t_5_occ_precedes_super_occ = True
+mapped_a_77_hasProcess(C_case_2, P1) = True
+mapped_a_72_Resource(user_2) = True
+E_3 = Ind!val!7
+PSL Occurrence Precedence Ontology_ont_t_0_occ_precedes_sort = True
+mapped_a_88_Resource(user_1) = True
+mapped_a_14_hasCase(E_0, C_case_0) = True
+mapped_a_92_hasRecordedTime(E_9) == 1451639400 = True
+PSL Core Ontology_ont_t_4_occurrence_sort_constraints = True
+Reference Taxonomy_ont_t_0_disjoint_classes = True
+PSL Occurrence Precedence Ontology_ont_t_3_occ_precedes_atomic_1 = True
+mapped_a_33_hasLifecycleTransition(E_7, T_complete) = True
+mapped_a_68_hasResource(E_11, user_1) = True
+mapped_a_25_hasResource(E_1, user_1) = True
+mapped_a_71_hasActivity(E_9, A_activity_B) = True
+PSL Core Ontology_ont_t_12_occurrence_temporal_extent = True
+PSL Occurrence Precedence Ontology_map_t_0_subocc_ev_occ = True
+mapped_a_18_hasResource(E_3, user_2) = True
+mapped_a_10_hasActivity(E_1, A_activity_A) = True
+mapped_a_66_hasRecordedTime(E_11) == 1483698900 = True
+mapped_a_75_hasResource(E_8, user_1) = True
+PSL Occurrence Precedence Ontology_ont_t_6_occ_covers_def = True
+mapped_a_2_Event(E_1) = True
+DomainClosure_hasCase = True
+mapped_a_62_Activity(A_activity_A) = True
+mapped_a_83_Activity(A_activity_C) = True
+mapped_a_9_hasCase(E_3, C_case_0) = True
+A_activity_C = Ind!val!22
+P1 = Ind!val!21
+PSL Core Ontology_ont_t_5_unique_activity_occurrence = True
+mapped_a_42_Case(C_case_1) = True
+mapped_a_52_hasRecordedTime(E_6) == 1451725200 = True
+E_5 = Ind!val!2
+mapped_a_79_Activity(A_activity_B) = True
+PSL Core Ontology_ont_t_8_participation_time_to_generic = True
+mapped_a_67_hasLifecycleTransition(E_11, T_complete) = True
+mapped_a_44_hasProcess(C_case_1, P1) = True
+mapped_a_40_hasActivity(E_7, A_activity_C) = True
+C_case_0 = Ind!val!12
+mapped_a_34_hasLifecycleTransition(E_4, T_complete) = True
+mapped_a_17_Event(E_2) = True
+C_case_2 = Ind!val!13
+mapped_a_4_hasLifecycleTransition(E_2, T_complete) = True
+E_4 = Ind!val!11
+mapped_a_22_hasActivity(E_3, A_activity_C) = True
+A_activity_B = Ind!val!25
+mapped_a_58_Activity(A_activity_C) = True
+mapped_a_29_Resource(user_1) = True
+PSL Occurrence Precedence Ontology_ont_t_9_comp_occ_precedes_def = True
+PSL Occurrence Precedence Ontology_ont_t_2_occ_precedes_irreflexive = True
+DomainClosure_Case = True
+mapped_a_6_hasCase(E_2, C_case_0) = True
+mapped_a_7_hasRecordedTime(E_2) == 1451640900 = True
+E_11 = Ind!val!10
+T_start = Ind!val!15
+mapped_a_53_hasActivity(E_4, A_activity_A) = True
+mapped_a_3_hasActivity(E_0, A_activity_A) = True
+mapped_a_50_Event(E_4) = True
+PSL Core Ontology_map_t_0_occurrence_start_end_event_mapping = True
+DomainClosure_Event = True
+mapped_a_32_Transition(T_complete) = True
+mapped_a_96_hasRecordedTime(E_8) == 1451638800 = True
+mapped_a_31_hasRecordedTime(E_3) == 1451640000 = True
+mapped_a_95_hasCase(E_8, C_case_2) = True
+mapped_a_73_hasLifecycleTransition(E_8, T_complete) = True
+PSL Occurrence Precedence Ontology_ont_t_10_hand_off_def = True
+mapped_a_45_hasCase(E_5, C_case_1) = True
+mapped_a_61_Resource(user_1) = True
+mapped_a_15_hasLifecycleTransition(E_3, T_start) = True
+C_case_1 = Ind!val!14
+mapped_a_37_hasLifecycleTransition(E_5, T_start) = True
+occ_precedes_sort = ForAll([x, y],
+       Implies(occ_precedes(x, y),
+               And(activity_occurrence(x),
+                   activity_occurrence(y))))
+participation_t_sort_constraints = ForAll([x, occ, t],
+       Implies(participates_in(x, occ, t),
+               And(object_(x),
+                   activity_occurrence(occ),
+                   timepoint(t))))
+comp_occ_precedes_def = ForAll([o1, o2, o],
+       comp_occ_precedes(o1, o2, o) ==
+       And(subocc(o1, o),
+           subocc(o2, o),
+           occ_precedes(o1, o2)))
+begin_unique = ForAll([x, t1, t2],
+       Implies(And(begin_of(x) == t1, begin_of(x) == t2),
+               t1 == t2))
+participation_time_to_generic = ForAll([x, occ],
+       Implies(Exists(t, participates_in(x, occ, t)),
+               participates(x, occ)))
+occurrence_temporal_extent = ForAll([occ, t],
+       is_occurring_at(occ, t) ==
+       And(activity_occurrence(occ),
+           begin_of(occ) <= t,
+           t <= end_of(occ)))
+disjoint_classes = ForAll(x,
+       And(Implies(Event(x),
+                   Not(Or(Transition(x),
+                          Activity(x),
+                          Case(x),
+                          Resource(x)))),
+           Implies(Transition(x),
+                   Not(Or(Activity(x), Case(x), Resource(x)))),
+           Implies(Activity(x),
+                   Not(Or(Case(x), Resource(x)))),
+           Implies(Case(x), Not(Resource(x)))))
+occ_precedes_covered = ForAll([o1, o2],
+       Implies(occ_precedes(o1, o2),
+               Exists(o3,
+                      And(occ_covers(o3, o2),
+                          Or(occ_precedes(o1, o3), o1 == o3)))))
+occurrence_has_activity = ForAll(occ,
+       Implies(activity_occurrence(occ),
+               Exists(a,
+                      And(activity(a),
+                          occurrence_of(occ, a)))))
+occurrence_participation_mapping = ForAll([e1, e2, t1, t2, c, a, r1, r2],
+       Implies(And(hasCase(e1, c),
+                   hasCase(e2, c),
+                   Not(e1 == e2),
+                   hasActivity(e1, a),
+                   hasActivity(e2, a),
+                   hasLifecycleTransition(e1, T_start),
+                   hasLifecycleTransition(e2, T_complete),
+                   hasRecordedTime(e1) == t1,
+                   hasRecordedTime(e2) == t2,
+                   hasResource(e1, r1),
+                   hasResource(e2, r2)),
+               And(participates_in(r1, ev_occ(e1, e2), t1),
+                   participates_in(r2, ev_occ(e1, e2), t2))))
+participation_sort_constraints = ForAll([x, occ],
+       Implies(participates(x, occ),
+               And(object_(x), activity_occurrence(occ))))
+occ_precedes_atomic_2 = ForAll([x, y],
+       Implies(occ_precedes(x, y),
+               Not(Exists(z, And(subocc(z, y), z != y)))))
+occ_precedes_transitive = ForAll([x, y, z],
+       Implies(And(occ_precedes(x, y), occ_precedes(y, z)),
+               occ_precedes(x, z)))
+event_order_SIMPLE = ForAll([e1, e2, c],
+       And(Event(e1),
+           Event(e2),
+           Case(c),
+           hasCase(e1, c),
+           hasCase(e2, c),
+           hasRecordedTime(e1) < hasRecordedTime(e2)) ==
+       event_earlier(e1, e2, c))
+occ_precedes_atomic_1 = ForAll([x, y],
+       Implies(occ_precedes(x, y),
+               Not(Exists(z, And(subocc(z, x), z != x)))))
+occ_precedes_covers = ForAll([o1, o2],
+       Implies(occ_precedes(o1, o2),
+               Exists(o3,
+                      And(occ_covers(o1, o3),
+                          Or(occ_precedes(o3, o2), o2 == o3)))))
+hand_off_def = ForAll([o1, o2, o, r1, r2],
+       Implies(And(comp_occ_precedes(o1, o2, o),
+                   participates(r1, o1),
+                   participates(r2, o2),
+                   r1 != r2),
+               hand_off(o1, o2, o)))
+type_disjointness = ForAll(x,
+       And(Implies(activity(x),
+                   Not(Or(activity_occurrence(x),
+                          object_(x)))),
+           Implies(activity_occurrence(x),
+                   Not(Or(object_(x), activity(x)))),
+           Implies(object_(x),
+                   Not(Or(activity_occurrence(x),
+                          activity(x))))))
+occurrence_bounds = ForAll(o,
+       Implies(activity_occurrence(o),
+               Exists([t1, t2],
+                      And(begin_of(o) == t1,
+                          end_of(o) == t2,
+                          t1 <= t2))))
+object_temporal_existence = ForAll([x, t],
+       exists_at(x, t) ==
+       And(object_(x), begin_of(x) <= t, t <= end_of(x)))
+participation_temporal_constraint = ForAll([x, occ, t],
+       Implies(participates_in(x, occ, t),
+               And(exists_at(x, t), is_occurring_at(occ, t))))
+case_process_occurrence_mapping = ForAll([c, p],
+       Implies(hasProcess(c, p), occurrence_of(c, p)))
+occ_precedes_irreflexive = ForAll(o,
+       Implies(activity_occurrence(o),
+               Not(occ_precedes(o, o))))
+occ_precedes_super_occ = ForAll([o1, o2],
+       Implies(occ_precedes(o1, o2),
+               Exists(o, And(subocc(o1, o), subocc(o2, o)))))
+occurrence_sort_constraints = ForAll([a, o],
+       Implies(occurrence_of(o, a),
+               And(activity_occurrence(o), activity(a))))
+ends_unique = ForAll([x, t1, t2],
+       Implies(And(end_of(x) == t1, end_of(x) == t2),
+               t1 == t2))
+occurrence_start_end_event_mapping = ForAll([e1, e2, t1, t2, c, a],
+       Implies(And(hasCase(e1, c),
+                   hasCase(e2, c),
+                   Not(e1 == e2),
+                   hasActivity(e1, a),
+                   hasActivity(e2, a),
+                   hasLifecycleTransition(e1, T_start),
+                   hasLifecycleTransition(e2, T_complete),
+                   hasRecordedTime(e1) == t1,
+                   hasRecordedTime(e2) == t2),
+               And(occurrence_of(ev_occ(e1, e2), a),
+                   begin_of(ev_occ(e1, e2)) == t1,
+                   end_of(ev_occ(e1, e2)) == t2)))
+occ_covers_def = ForAll([o1, o2],
+       occ_covers(o1, o2) ==
+       And(occ_precedes(o1, o2),
+           Not(Exists(o3,
+                      And(occ_precedes(o1, o3),
+                          occ_precedes(o3, o2))))))
+subocc_ev_occ = ForAll([e1, e2, t1, t2, c, a, p],
+       Implies(And(hasCase(e1, c),
+                   hasCase(e2, c),
+                   Not(e1 == e2),
+                   hasActivity(e1, a),
+                   hasActivity(e2, a),
+                   hasLifecycleTransition(e1, T_start),
+                   hasLifecycleTransition(e2, T_complete),
+                   hasRecordedTime(e1) == t1,
+                   hasRecordedTime(e2) == t2,
+                   hasProcess(c, p)),
+               subocc(ev_occ(e1, e2), c)))
+comp_occ_precedes_mapping = ForAll([e11, e12, e21, e22, c],
+       Implies(And(subocc(ev_occ(e11, e12), c),
+                   subocc(ev_occ(e21, e22), c),
+                   ev_occ(e11, e12) != ev_occ(e21, e22),
+                   event_earlier(e12, e21, c)),
+               comp_occ_precedes(ev_occ(e11, e12),
+                                 ev_occ(e21, e22),
+                                 c)))
+ping_pong_def = ForAll([o11, o12, o21, o22, o],
+       Implies(And(hand_off(o11, o12, o),
+                   hand_off(o21, o22, o),
+                   o11 != o21,
+                   o12 != o22),
+               ping_pong(o)))
+infer_next_event = ForAll([e1, e2, c],
+       And(event_earlier(e1, e2, c),
+           Not(Exists([e3, t3],
+                      And(Event(e3),
+                          Not(e3 == e1),
+                          Not(e3 == e2),
+                          hasCase(e3, c),
+                          hasRecordedTime(e3) <
+                          hasRecordedTime(e2),
+                          hasRecordedTime(e3) >
+                          hasRecordedTime(e1))))) ==
+       next_event(e1, e2, c))
+unique_activity_occurrence = ForAll([o, a1, a2],
+       Implies(And(occurrence_of(o, a1),
+                   occurrence_of(o, a2)),
+               a1 == a2))
+activity_occurrence = [else ->
+ Or(k!4456(Var(0)) == Ind!val!13,
+    k!4456(Var(0)) == Ind!val!28,
+    k!4456(Var(0)) == Ind!val!12,
+    k!4456(Var(0)) == Ind!val!29,
+    k!4456(Var(0)) == Ind!val!2,
+    k!4456(Var(0)) == Ind!val!14,
+    k!4456(Var(0)) == Ind!val!24)]
+Transition = [else ->
+ Or(k!4456(Var(0)) == Ind!val!15,
+    k!4456(Var(0)) == Ind!val!16)]
+Resource = [else ->
+ Or(k!4456(Var(0)) == Ind!val!18,
+    k!4456(Var(0)) == Ind!val!17,
+    k!4456(Var(0)) == Ind!val!19)]
+occ_covers = [else ->
+ And(k!4456(Var(0)) == Ind!val!29,
+     k!4456(Var(1)) == Ind!val!28)]
+activity = [else ->
+ Or(k!4456(Var(0)) == Ind!val!38,
+    k!4456(Var(0)) == Ind!val!21,
+    k!4456(Var(0)) == Ind!val!31,
+    k!4456(Var(0)) == Ind!val!25,
+    k!4456(Var(0)) == Ind!val!22)]
+exists_at = [(Ind!val!19, 1451725200) -> True,
+ (Ind!val!19, 1451724600) -> True,
+ (Ind!val!18, 1451639700) -> True,
+ (Ind!val!18, 1451638800) -> True,
+ (Ind!val!17, 1451640900) -> True,
+ (Ind!val!17, 1451640000) -> True,
+ (Ind!val!36, 1451639400) -> True,
+ (Ind!val!36, 1451638800) -> True,
+ else ->
+ Not(Or(Not(object_(Var(0))),
+        Not(Var(1) + -1*end_of(Var(0)) <= 0),
+        Not(Var(1) + -1*begin_of(Var(0)) >= 0)))]
+participates_in = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!19,
+        k!4456(Var(1)) == Ind!val!24,
+        Not(Var(2) == 32059199),
+        Not(Var(2) == 2903623203/2),
+        Not(Var(2) == 32059200),
+        Not(Var(2) == 1451638800),
+        Not(Var(2) == 1451639700),
+        Not(Var(2) == 1451710954),
+        Var(2) == 1451724600),
+    And(k!4456(Var(0)) == Ind!val!18,
+        k!4456(Var(1)) == Ind!val!29,
+        Not(Var(2) == 32059199),
+        Not(Var(2) == 2903623203/2),
+        Not(Var(2) == 32059200),
+        Not(Var(2) == 1451638800),
+        Var(2) == 1451639700),
+    And(k!4456(Var(0)) == Ind!val!18,
+        k!4456(Var(1)) == Ind!val!29,
+        Not(Var(2) == 32059199),
+        Not(Var(2) == 2903623203/2),
+        Not(Var(2) == 32059200),
+        Var(2) == 1451638800),
+    And(k!4456(Var(0)) == Ind!val!17,
+        k!4456(Var(1)) == Ind!val!28,
+        Not(Var(2) == 32059199),
+        Not(Var(2) == 2903623203/2),
+        Not(Var(2) == 32059200),
+        Not(Var(2) == 1451638800),
+        Not(Var(2) == 1451639700),
+        Not(Var(2) == 1451710954),
+        Not(Var(2) == 1451724600),
+        Not(Var(2) == 1451640900),
+        Not(Var(2) == 1451725200),
+        Not(Var(2) == 1451639400),
+        Var(2) == 1451640000),
+    And(k!4456(Var(0)) == Ind!val!17,
+        k!4456(Var(1)) == Ind!val!28,
+        Not(Var(2) == 32059199),
+        Not(Var(2) == 2903623203/2),
+        Not(Var(2) == 32059200),
+        Not(Var(2) == 1451638800),
+        Not(Var(2) == 1451639700),
+        Not(Var(2) == 1451710954),
+        Not(Var(2) == 1451724600),
+        Var(2) == 1451640900),
+    And(k!4456(Var(0)) == Ind!val!19,
+        k!4456(Var(1)) == Ind!val!24,
+        Not(Var(2) == 32059199),
+        Not(Var(2) == 2903623203/2),
+        Not(Var(2) == 32059200),
+        Not(Var(2) == 1451638800),
+        Not(Var(2) == 1451639700),
+        Not(Var(2) == 1451710954),
+        Not(Var(2) == 1451724600),
+        Not(Var(2) == 1451640900),
+        Var(2) == 1451725200))]
+occurrence_of = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!2,
+        k!4456(Var(1)) == Ind!val!31),
+    And(k!4456(Var(0)) == Ind!val!14,
+        k!4456(Var(1)) == Ind!val!21),
+    And(k!4456(Var(0)) == Ind!val!12,
+        k!4456(Var(1)) == Ind!val!21),
+    And(k!4456(Var(0)) == Ind!val!29,
+        k!4456(Var(1)) == Ind!val!38),
+    And(k!4456(Var(0)) == Ind!val!28,
+        k!4456(Var(1)) == Ind!val!22),
+    And(k!4456(Var(0)) == Ind!val!24,
+        k!4456(Var(1)) == Ind!val!25),
+    And(k!4456(Var(0)) == Ind!val!13,
+        k!4456(Var(1)) == Ind!val!21))]
+occ_precedes = [else ->
+ And(k!4456(Var(0)) == Ind!val!29,
+     k!4456(Var(1)) == Ind!val!28)]
+hasResource = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!4,
+        k!4456(Var(1)) == Ind!val!19),
+    And(k!4456(Var(0)) == Ind!val!5,
+        k!4456(Var(1)) == Ind!val!18),
+    And(k!4456(Var(0)) == Ind!val!3,
+        k!4456(Var(1)) == Ind!val!19),
+    And(k!4456(Var(0)) == Ind!val!11,
+        k!4456(Var(1)) == Ind!val!18),
+    And(k!4456(Var(0)) == Ind!val!7,
+        k!4456(Var(1)) == Ind!val!17),
+    And(k!4456(Var(0)) == Ind!val!2,
+        k!4456(Var(1)) == Ind!val!19),
+    And(k!4456(Var(0)) == Ind!val!8,
+        k!4456(Var(1)) == Ind!val!18),
+    And(k!4456(Var(0)) == Ind!val!0,
+        k!4456(Var(1)) == Ind!val!18),
+    And(k!4456(Var(0)) == Ind!val!1,
+        k!4456(Var(1)) == Ind!val!18),
+    And(k!4456(Var(0)) == Ind!val!9,
+        k!4456(Var(1)) == Ind!val!17),
+    And(k!4456(Var(0)) == Ind!val!6,
+        k!4456(Var(1)) == Ind!val!17),
+    And(k!4456(Var(0)) == Ind!val!10,
+        k!4456(Var(1)) == Ind!val!18))]
+next_event = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!11,
+        k!4456(Var(1)) == Ind!val!2,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!7,
+        k!4456(Var(1)) == Ind!val!6,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!8,
+        k!4456(Var(1)) == Ind!val!7,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!2,
+        k!4456(Var(1)) == Ind!val!3,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!5,
+        k!4456(Var(1)) == Ind!val!9,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!9,
+        k!4456(Var(1)) == Ind!val!10,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!3,
+        k!4456(Var(1)) == Ind!val!4,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!1,
+        k!4456(Var(1)) == Ind!val!8,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!0,
+        k!4456(Var(1)) == Ind!val!5,
+        k!4456(Var(2)) == Ind!val!13))]
+Case = [else ->
+ Or(k!4456(Var(0)) == Ind!val!13,
+    k!4456(Var(0)) == Ind!val!12,
+    k!4456(Var(0)) == Ind!val!14)]
+hasRecordedTime = [else ->
+ If(k!4456(Var(0)) == Ind!val!37,
+    2903449199/2,
+    If(k!4456(Var(0)) == Ind!val!11,
+       1451710954,
+       If(k!4456(Var(0)) == Ind!val!0,
+          1451638800,
+          If(k!4456(Var(0)) == Ind!val!5,
+             1451639400,
+             If(k!4456(Var(0)) == Ind!val!9,
+                1451639700,
+                If(k!4456(Var(0)) == Ind!val!10,
+                   1483698900,
+                   If(k!4456(Var(0)) == Ind!val!2,
+                      1451724600,
+                      If(k!4456(Var(0)) == Ind!val!3,
+                         1451725200,
+                         If(k!4456(Var(0)) == Ind!val!4,
+                            1451811600,
+                            If(k!4456(Var(0)) == Ind!val!7,
+                               1451640000,
+                               If(k!4456(Var(0)) ==
+                                  Ind!val!8,
+                                  1451639700,
+                                  If(k!4456(Var(0)) ==
+                                     Ind!val!6,
+                                     1451640900,
+                                     If(k!4456(Var(0)) ==
+                                        Ind!val!1,
+                                        1451638800,
+                                        48)))))))))))))]
+event_earlier = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!8,
+        k!4456(Var(1)) == Ind!val!6,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!0,
+        k!4456(Var(1)) == Ind!val!9,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!11,
+        k!4456(Var(1)) == Ind!val!2,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!2,
+        k!4456(Var(1)) == Ind!val!4,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!5,
+        k!4456(Var(1)) == Ind!val!10,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!7,
+        k!4456(Var(1)) == Ind!val!6,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!8,
+        k!4456(Var(1)) == Ind!val!7,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!2,
+        k!4456(Var(1)) == Ind!val!3,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!1,
+        k!4456(Var(1)) == Ind!val!7,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!5,
+        k!4456(Var(1)) == Ind!val!9,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!9,
+        k!4456(Var(1)) == Ind!val!10,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!11,
+        k!4456(Var(1)) == Ind!val!4,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!1,
+        k!4456(Var(1)) == Ind!val!6,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!0,
+        k!4456(Var(1)) == Ind!val!10,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!3,
+        k!4456(Var(1)) == Ind!val!4,
+        k!4456(Var(2)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!1,
+        k!4456(Var(1)) == Ind!val!8,
+        k!4456(Var(2)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!0,
+        k!4456(Var(1)) == Ind!val!5,
+        k!4456(Var(2)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!11,
+        k!4456(Var(1)) == Ind!val!3,
+        k!4456(Var(2)) == Ind!val!14))]
+is_occurring_at = [(Ind!val!24, 1451725200) -> True,
+ (Ind!val!24, 1451724600) -> True,
+ (Ind!val!29, 1451639700) -> True,
+ (Ind!val!29, 1451638800) -> True,
+ (Ind!val!28, 1451640900) -> True,
+ (Ind!val!28, 1451640000) -> True,
+ (Ind!val!29, 1451639400) -> True,
+ else ->
+ Not(Or(Not(activity_occurrence(Var(0))),
+        Not(Var(1) + -1*end_of(Var(0)) <= 0),
+        Not(Var(1) + -1*begin_of(Var(0)) >= 0)))]
+hand_off = [else ->
+ Not(And(k!4456(Var(0)) == Ind!val!19,
+         k!4456(Var(1)) == Ind!val!19,
+         k!4456(Var(2)) == Ind!val!25))]
+timepoint = [else -> True]
+k!4456 = [Ind!val!160 -> Ind!val!160,
+ Ind!val!103 -> Ind!val!103,
+ Ind!val!137 -> Ind!val!137,
+ Ind!val!105 -> Ind!val!105,
+ Ind!val!0 -> Ind!val!0,
+ Ind!val!143 -> Ind!val!143,
+ Ind!val!173 -> Ind!val!173,
+ Ind!val!189 -> Ind!val!189,
+ Ind!val!1 -> Ind!val!1,
+ Ind!val!24 -> Ind!val!24,
+ Ind!val!162 -> Ind!val!162,
+ Ind!val!121 -> Ind!val!121,
+ Ind!val!164 -> Ind!val!164,
+ Ind!val!147 -> Ind!val!147,
+ Ind!val!138 -> Ind!val!138,
+ Ind!val!178 -> Ind!val!178,
+ Ind!val!134 -> Ind!val!134,
+ Ind!val!133 -> Ind!val!133,
+ Ind!val!29 -> Ind!val!29,
+ Ind!val!65 -> Ind!val!65,
+ Ind!val!7 -> Ind!val!7,
+ Ind!val!4 -> Ind!val!4,
+ Ind!val!73 -> Ind!val!73,
+ Ind!val!27 -> Ind!val!27,
+ Ind!val!72 -> Ind!val!72,
+ Ind!val!106 -> Ind!val!106,
+ Ind!val!132 -> Ind!val!132,
+ Ind!val!197 -> Ind!val!197,
+ Ind!val!159 -> Ind!val!159,
+ Ind!val!22 -> Ind!val!22,
+ Ind!val!43 -> Ind!val!43,
+ Ind!val!169 -> Ind!val!169,
+ Ind!val!78 -> Ind!val!78,
+ Ind!val!109 -> Ind!val!109,
+ Ind!val!9 -> Ind!val!9,
+ Ind!val!130 -> Ind!val!130,
+ Ind!val!136 -> Ind!val!136,
+ Ind!val!150 -> Ind!val!150,
+ Ind!val!89 -> Ind!val!89,
+ Ind!val!186 -> Ind!val!186,
+ Ind!val!104 -> Ind!val!104,
+ Ind!val!62 -> Ind!val!62,
+ Ind!val!184 -> Ind!val!184,
+ Ind!val!5 -> Ind!val!5,
+ Ind!val!151 -> Ind!val!151,
+ Ind!val!53 -> Ind!val!53,
+ Ind!val!75 -> Ind!val!75,
+ Ind!val!177 -> Ind!val!177,
+ Ind!val!123 -> Ind!val!123,
+ Ind!val!54 -> Ind!val!54,
+ Ind!val!87 -> Ind!val!87,
+ Ind!val!124 -> Ind!val!124,
+ Ind!val!116 -> Ind!val!116,
+ Ind!val!171 -> Ind!val!171,
+ Ind!val!23 -> Ind!val!23,
+ Ind!val!111 -> Ind!val!111,
+ Ind!val!92 -> Ind!val!92,
+ Ind!val!190 -> Ind!val!190,
+ Ind!val!55 -> Ind!val!55,
+ Ind!val!42 -> Ind!val!42,
+ Ind!val!142 -> Ind!val!142,
+ Ind!val!117 -> Ind!val!117,
+ Ind!val!28 -> Ind!val!28,
+ Ind!val!122 -> Ind!val!122,
+ Ind!val!95 -> Ind!val!95,
+ Ind!val!49 -> Ind!val!49,
+ Ind!val!58 -> Ind!val!58,
+ Ind!val!59 -> Ind!val!59,
+ Ind!val!146 -> Ind!val!146,
+ Ind!val!77 -> Ind!val!77,
+ Ind!val!172 -> Ind!val!172,
+ Ind!val!31 -> Ind!val!31,
+ Ind!val!63 -> Ind!val!63,
+ Ind!val!66 -> Ind!val!66,
+ Ind!val!108 -> Ind!val!108,
+ Ind!val!12 -> Ind!val!12,
+ Ind!val!126 -> Ind!val!126,
+ Ind!val!158 -> Ind!val!158,
+ Ind!val!120 -> Ind!val!120,
+ Ind!val!91 -> Ind!val!91,
+ Ind!val!41 -> Ind!val!41,
+ Ind!val!13 -> Ind!val!13,
+ Ind!val!154 -> Ind!val!154,
+ Ind!val!85 -> Ind!val!85,
+ Ind!val!82 -> Ind!val!82,
+ Ind!val!93 -> Ind!val!93,
+ Ind!val!107 -> Ind!val!107,
+ Ind!val!11 -> Ind!val!11,
+ Ind!val!112 -> Ind!val!112,
+ Ind!val!45 -> Ind!val!45,
+ Ind!val!80 -> Ind!val!80,
+ Ind!val!2 -> Ind!val!2,
+ Ind!val!97 -> Ind!val!97,
+ Ind!val!84 -> Ind!val!84,
+ Ind!val!98 -> Ind!val!98,
+ Ind!val!166 -> Ind!val!166,
+ Ind!val!119 -> Ind!val!119,
+ Ind!val!194 -> Ind!val!194,
+ Ind!val!52 -> Ind!val!52,
+ Ind!val!68 -> Ind!val!68,
+ Ind!val!125 -> Ind!val!125,
+ Ind!val!14 -> Ind!val!14,
+ Ind!val!30 -> Ind!val!30,
+ Ind!val!74 -> Ind!val!74,
+ Ind!val!196 -> Ind!val!196,
+ Ind!val!139 -> Ind!val!139,
+ Ind!val!32 -> Ind!val!32,
+ Ind!val!34 -> Ind!val!34,
+ Ind!val!187 -> Ind!val!187,
+ Ind!val!195 -> Ind!val!195,
+ Ind!val!176 -> Ind!val!176,
+ Ind!val!191 -> Ind!val!191,
+ Ind!val!21 -> Ind!val!21,
+ Ind!val!40 -> Ind!val!40,
+ Ind!val!127 -> Ind!val!127,
+ Ind!val!174 -> Ind!val!174,
+ Ind!val!35 -> Ind!val!35,
+ Ind!val!161 -> Ind!val!161,
+ Ind!val!157 -> Ind!val!157,
+ Ind!val!48 -> Ind!val!48,
+ Ind!val!193 -> Ind!val!193,
+ Ind!val!46 -> Ind!val!46,
+ Ind!val!129 -> Ind!val!129,
+ Ind!val!181 -> Ind!val!181,
+ Ind!val!19 -> Ind!val!19,
+ Ind!val!8 -> Ind!val!8,
+ Ind!val!140 -> Ind!val!140,
+ Ind!val!26 -> Ind!val!26,
+ Ind!val!16 -> Ind!val!16,
+ ...]
+transition = [else -> True]
+hasLifecycleTransition = [else ->
+ And(Not(And(k!4456(Var(0)) == Ind!val!11,
+             Var(1) == Ind!val!15)),
+     Not(And(k!4456(Var(0)) == Ind!val!10,
+             Var(1) == Ind!val!15)),
+     Not(And(k!4456(Var(0)) == Ind!val!1,
+             Var(1) == Ind!val!16)),
+     Not(And(k!4456(Var(0)) == Ind!val!2,
+             Var(1) == Ind!val!16)),
+     Not(And(k!4456(Var(0)) == Ind!val!6,
+             Var(1) == Ind!val!15)),
+     Not(And(k!4456(Var(0)) == Ind!val!7,
+             Var(1) == Ind!val!16)))]
+comp_occ_precedes = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!29,
+        k!4456(Var(1)) == Ind!val!28,
+        k!4456(Var(2)) == Ind!val!197),
+    And(k!4456(Var(0)) == Ind!val!29,
+        k!4456(Var(1)) == Ind!val!28,
+        k!4456(Var(2)) == Ind!val!12))]
+begin_of = [else ->
+ If(k!4456(Var(0)) == Ind!val!2,
+    0,
+    If(k!4456(Var(0)) == Ind!val!29,
+       1451638800,
+       If(Or(k!4456(Var(0)) == Ind!val!18,
+             k!4456(Var(0)) == Ind!val!17,
+             k!4456(Var(0)) == Ind!val!19),
+          0,
+          If(k!4456(Var(0)) == Ind!val!24,
+             1451724600,
+             If(k!4456(Var(0)) == Ind!val!36,
+                0,
+                If(k!4456(Var(0)) == Ind!val!35,
+                   2967397801/2,
+                   If(Or(k!4456(Var(0)) == Ind!val!13,
+                         k!4456(Var(0)) == Ind!val!12,
+                         k!4456(Var(0)) == Ind!val!14),
+                      0,
+                      If(k!4456(Var(0)) == Ind!val!28,
+                         1451640000,
+                         46))))))))]
+hasActivity = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!1,
+        k!4456(Var(1)) == Ind!val!38),
+    And(k!4456(Var(0)) == Ind!val!0,
+        k!4456(Var(1)) == Ind!val!38),
+    And(k!4456(Var(0)) == Ind!val!9,
+        k!4456(Var(1)) == Ind!val!22),
+    And(k!4456(Var(0)) == Ind!val!3,
+        k!4456(Var(1)) == Ind!val!25),
+    And(k!4456(Var(0)) == Ind!val!5,
+        k!4456(Var(1)) == Ind!val!25),
+    And(k!4456(Var(0)) == Ind!val!4,
+        k!4456(Var(1)) == Ind!val!22),
+    And(k!4456(Var(0)) == Ind!val!6,
+        k!4456(Var(1)) == Ind!val!22),
+    And(k!4456(Var(0)) == Ind!val!10,
+        k!4456(Var(1)) == Ind!val!20),
+    And(k!4456(Var(0)) == Ind!val!11,
+        k!4456(Var(1)) == Ind!val!38),
+    And(k!4456(Var(0)) == Ind!val!8,
+        k!4456(Var(1)) == Ind!val!38),
+    And(k!4456(Var(0)) == Ind!val!2,
+        k!4456(Var(1)) == Ind!val!25),
+    And(k!4456(Var(0)) == Ind!val!7,
+        k!4456(Var(1)) == Ind!val!22))]
+ev_occ = [else ->
+ If(And(k!4456(Var(0)) == Ind!val!7,
+        k!4456(Var(1)) == Ind!val!53),
+    Ind!val!196,
+    If(And(k!4456(Var(0)) == Ind!val!7,
+           k!4456(Var(1)) == Ind!val!161),
+       Ind!val!195,
+       If(And(k!4456(Var(0)) == Ind!val!7,
+              k!4456(Var(1)) == Ind!val!177),
+          Ind!val!194,
+          If(And(k!4456(Var(0)) == Ind!val!7,
+                 k!4456(Var(1)) == Ind!val!5),
+             Ind!val!193,
+             If(And(k!4456(Var(0)) == Ind!val!7,
+                    k!4456(Var(1)) == Ind!val!113),
+                Ind!val!192,
+                If(And(k!4456(Var(0)) == Ind!val!7,
+                       k!4456(Var(1)) == Ind!val!126),
+                   Ind!val!191,
+                   If(And(k!4456(Var(0)) == Ind!val!7,
+                          k!4456(Var(1)) == Ind!val!171),
+                      Ind!val!190,
+                      If(And(k!4456(Var(0)) == Ind!val!7,
+                             k!4456(Var(1)) == Ind!val!169),
+                         Ind!val!189,
+                         If(And(k!4456(Var(0)) == Ind!val!7,
+                                k!4456(Var(1)) == Ind!val!62),
+                            Ind!val!188,
+                            If(And(k!4456(Var(0)) ==
+                                   Ind!val!7,
+                                   k!4456(Var(1)) ==
+                                   Ind!val!158),
+                               Ind!val!187,
+                               If(And(k!4456(Var(0)) ==
+                                      Ind!val!7,
+                                      k!4456(Var(1)) ==
+                                      Ind!val!128),
+                                  Ind!val!186,
+                                  If(And(k!4456(Var(0)) ==
+                                        Ind!val!7,
+                                        k!4456(Var(1)) ==
+                                        Ind!val!174),
+                                     Ind!val!185,
+                                     If(And(k!4456(Var(0)) ==
+                                        Ind!val!7,
+                                        k!4456(Var(1)) ==
+                                        Ind!val!170),
+                                        Ind!val!184,
+                                        If(And(k!4456(Var(0)) ==
+                                        Ind!val!7,
+                                        k!4456(Var(1)) ==
+                                        Ind!val!176),
+                                        Ind!val!183,
+                                        If(And(k!4456(Var(0)) ==
+                                        Ind!val!7,
+                                        k!4456(Var(1)) ==
+                                        Ind!val!173),
+                                        Ind!val!182,
+                                        If(And(k!4456(Var(0)) ==
+                                        Ind!val!7,
+                                        k!4456(Var(1)) ==
+                                        Ind!val!164),
+                                        Ind!val!181,
+                                        If(And(k!4456(Var(0)) ==
+                                        Ind!val!7,
+                                        k!4456(Var(1)) ==
+                                        Ind!val!162),
+                                        Ind!val!180,
+                                        If(And(k!4456(...) ==
+                                        Ind!val!7,
+                                        k!4456(...) ==
+                                        Ind!val!139),
+                                        Ind!val!179,
+                                        If(And(... == ...,
+                                        ... == ...),
+                                        Ind!val!178,
+                                        If(And(..., ...),
+                                        Ind!val!177,
+                                        If(..., ..., ...)))))))))))))))))))))]
+object_ = [else ->
+ Or(k!4456(Var(0)) == Ind!val!46,
+    k!4456(Var(0)) == Ind!val!18,
+    k!4456(Var(0)) == Ind!val!17,
+    k!4456(Var(0)) == Ind!val!36,
+    k!4456(Var(0)) == Ind!val!11,
+    k!4456(Var(0)) == Ind!val!27,
+    k!4456(Var(0)) == Ind!val!23,
+    k!4456(Var(0)) == Ind!val!19,
+    k!4456(Var(0)) == Ind!val!6)]
+Event = [else ->
+ Or(k!4456(Var(0)) == Ind!val!1,
+    k!4456(Var(0)) == Ind!val!7,
+    k!4456(Var(0)) == Ind!val!5,
+    k!4456(Var(0)) == Ind!val!3,
+    k!4456(Var(0)) == Ind!val!9,
+    k!4456(Var(0)) == Ind!val!11,
+    k!4456(Var(0)) == Ind!val!4,
+    k!4456(Var(0)) == Ind!val!10,
+    k!4456(Var(0)) == Ind!val!8,
+    k!4456(Var(0)) == Ind!val!2,
+    k!4456(Var(0)) == Ind!val!0,
+    k!4456(Var(0)) == Ind!val!6)]
+ping_pong = [else -> True]
+hasProcess = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!14,
+        k!4456(Var(1)) == Ind!val!21),
+    And(k!4456(Var(0)) == Ind!val!12,
+        k!4456(Var(1)) == Ind!val!21),
+    And(k!4456(Var(0)) == Ind!val!13,
+        k!4456(Var(1)) == Ind!val!21))]
+end_of = [else ->
+ If(k!4456(Var(0)) == Ind!val!2,
+    0,
+    If(k!4456(Var(0)) == Ind!val!29,
+       1451639700,
+       If(k!4456(Var(0)) == Ind!val!17,
+          1451640900,
+          If(k!4456(Var(0)) == Ind!val!19,
+             1451725200,
+             If(k!4456(Var(0)) == Ind!val!18,
+                1451639700,
+                If(k!4456(Var(0)) == Ind!val!24,
+                   1451725200,
+                   If(k!4456(Var(0)) == Ind!val!36,
+                      1451639400,
+                      If(Or(k!4456(Var(0)) == Ind!val!13,
+                            k!4456(Var(0)) == Ind!val!12,
+                            k!4456(Var(0)) == Ind!val!14),
+                         0,
+                         If(k!4456(Var(0)) == Ind!val!28,
+                            1451640900,
+                            47)))))))))]
+Activity = [else ->
+ Or(k!4456(Var(0)) == Ind!val!20,
+    k!4456(Var(0)) == Ind!val!38,
+    k!4456(Var(0)) == Ind!val!25,
+    k!4456(Var(0)) == Ind!val!22)]
+hasCase = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!8,
+        k!4456(Var(1)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!3,
+        k!4456(Var(1)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!7,
+        k!4456(Var(1)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!9,
+        k!4456(Var(1)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!4,
+        k!4456(Var(1)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!10,
+        k!4456(Var(1)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!11,
+        k!4456(Var(1)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!0,
+        k!4456(Var(1)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!2,
+        k!4456(Var(1)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!5,
+        k!4456(Var(1)) == Ind!val!13),
+    And(k!4456(Var(0)) == Ind!val!6,
+        k!4456(Var(1)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!1,
+        k!4456(Var(1)) == Ind!val!12))]
+participates = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!17,
+        k!4456(Var(1)) == Ind!val!28),
+    And(k!4456(Var(0)) == Ind!val!19,
+        k!4456(Var(1)) == Ind!val!24),
+    And(k!4456(Var(0)) == Ind!val!18,
+        k!4456(Var(1)) == Ind!val!29))]
+subocc = [else ->
+ Or(And(k!4456(Var(0)) == Ind!val!28,
+        k!4456(Var(1)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!28,
+        k!4456(Var(1)) == Ind!val!197),
+    And(k!4456(Var(0)) == Ind!val!29,
+        k!4456(Var(1)) == Ind!val!12),
+    And(k!4456(Var(0)) == Ind!val!24,
+        k!4456(Var(1)) == Ind!val!14),
+    And(k!4456(Var(0)) == Ind!val!29,
+        k!4456(Var(1)) == Ind!val!197))]

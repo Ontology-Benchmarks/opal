@@ -12,6 +12,7 @@
 (declare-fun hasActivity (Ind Ind) Bool)
 (declare-fun next_event (Ind Ind Ind) Bool)
 (declare-fun event_earlier (Ind Ind Ind) Bool)
+(declare-fun hasProcess (Ind Ind) Bool)
 
 
 ; Declare individual constants for start and complete transitions

@@ -1,0 +1,149 @@
+
+formulas(assumptions).
+
+% Reflexive
+all x
+	(poset_element(x)
+	->
+	leq(x,x)).
+
+% Antisymmetry
+all x all y
+	((leq(x,y)
+	& leq(y,x))
+	->
+	(x=y)).
+
+% Transitive
+all x all y all z
+	((leq(x,y)
+	& leq(y,z))
+	->
+	leq(x,z)).
+
+all x all y all z
+	((leq(x,y)
+	& leq(z,y))
+	->
+	(leq(x,z)
+	| leq(z,x))).
+
+all x all y
+	(exists z
+		(leq(z,x)
+		& leq(z,y))).
+
+(exists x
+	(poset_element(x)
+	& (all y
+		(-lt(y,x))))).
+
+(all x all y
+        (lt(x,y)
+        ->
+        (exists z
+                (covers(y,z)
+                & leq(x,z))))).
+
+(all x all y
+        (lt(x,y)
+        ->
+        (exists z
+                (covers(z,x)
+                & leq(z,y))))).
+
+(all x all y
+        (covers(y,x)
+        <->
+        (lt(x,y)
+        & -(exists z
+                (poset_element(z)
+		& lt(x,z)
+                & lt(z,y)))))).
+
+(all x all y
+	(lt(x,y)
+	<->
+	(leq(x,y)
+	& (x != y)))).
+
+(all x
+	(mereo_element(x)
+	->
+	part(x,x))).
+
+(all x all y
+	((part(x,y)
+	& part(y,x))
+	->
+	(x=y))).
+
+(all x all y all z
+	((part(x,y)
+	& part(y,z))
+	->
+	part(x,z))).
+
+(all x all y
+	(ppart(x,y)
+	<->
+	(part(x,y)
+	& -part(y,x)))).
+
+(all x all y
+	(overlaps(x,y)
+	<->
+	(exists z
+		(part(z,x)
+		& part(z,y))))).
+
+(all x all y
+	(next_part(x,y)
+	<->
+	(ppart(x,y)
+	& -(exists z
+		(mereo_element(z)
+		& ppart(x,z)
+		& ppart(z,y)))))).
+
+(all x all y 
+	(ppart(x,y)
+	->
+	(next_part(x,y)
+	| (exists z
+		(next_part(x,z)
+		& ppart(z,y)))
+	| (exists z
+		(ppart(x,z)
+		& next_part(z,y)))))).
+
+(all x all y
+	(overlaps(x,y)
+	->
+	(part(x,y)
+	| ppart(y,x)))).
+
+(all x all y
+	((mereo_element(x)
+	& poset_element(y)
+	& leq(y,x))
+	->
+	mereo_element(y))).
+
+(all x all y
+	(part(x,y)
+	->
+	leq(x,y))).
+
+(all x all y
+	(part(x,y)
+	->
+	(mereo_element(x)
+	& mereo_element(y)))).
+
+(all x all y
+	(leq(x,y)
+	->
+	(poset_element(x)
+	& poset_element(y)))).
+end_of_list.

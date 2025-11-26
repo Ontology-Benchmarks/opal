@@ -1,0 +1,66 @@
+
+formulas(assumptions).
+
+(all x all y
+	(part(x,y)
+	->
+	(D(x) & D(y)))).
+
+(all x
+	(D(x)
+	->
+	(part(x,x)))).
+
+(all x all y
+	((part(x,y)
+	& part(y,x))
+	->
+	(x=y))).
+
+(all x all y all z
+	((part(x,y)
+	& part(y,z))
+	->
+	part(x,z))).
+
+(all x all y
+	(ppart(x,y)
+	<->
+	(part(x,y)
+	& -part(y,x)))).
+
+(all x all y
+	(overlaps(x,y)
+	<->
+	(exists z
+		(D(z)
+		& part(z,x)
+		& part(z,y))))).
+
+(all x all y
+	(next_part(x,y)
+	<->
+	(ppart(x,y)
+	& -(exists z
+		(D(z)
+		& ppart(x,z)
+		& ppart(z,y)))))).
+
+(all x all y 
+	(ppart(x,y)
+	->
+	(next_part(x,y)
+	| (exists z
+		(D(z) & next_part(x,z)
+		& ppart(z,y)))
+	| (exists z
+		(D(z) & ppart(x,z)
+		& next_part(z,y)))))).
+
+(all x all y
+	(overlaps(x,y)
+	->
+	(part(x,y)
+	| ppart(y,x)))).
+
+end_of_list.

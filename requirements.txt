@@ -6,3 +6,4 @@ yatter
 twine
 z3-solver
 sexpdata
+rustxesx
